@@ -7,9 +7,6 @@ const client = new Client({
 
 const BOT_NAME = "MikaBot PRO 👑"
 
-// 🧠 memória de boas-vindas (não repete por pessoa)
-const greeted = new Set()
-
 // 📲 QR CODE
 client.on("qr", qr => {
     console.log("📲 Escaneia o QR:")
@@ -31,7 +28,7 @@ client.on("message", async (msg) => {
 
     console.log("📩:", text)
 
-    // 📌 COMANDOS
+    // 📌 MENU
     if (text === "menu") {
         return msg.reply(
 `🤖 ${BOT_NAME}
@@ -44,14 +41,17 @@ client.on("message", async (msg) => {
         )
     }
 
+    // 🏓 PING
     if (text === "ping") {
         return msg.reply("🏓 Pong!")
     }
 
+    // 👋 OI
     if (text === "oi") {
         return msg.reply("👋 Oi! MikaBot PRO aqui 🚀")
     }
 
+    // 📜 REGRAS
     if (text === "regras") {
         return msg.reply(
 `📜 REGRAS DO GRUPO
@@ -61,29 +61,28 @@ client.on("message", async (msg) => {
 🚫 Proibido ofensas ou spam`
         )
     }
+})
 
-    // 👋 BOAS-VINDAS 1X (quando a pessoa fala pela primeira vez no grupo)
-    if (chat.isGroup) {
+// 👋 BOAS-VINDAS (quando alguém entra no grupo)
+client.on("group_join", async (notification) => {
+    try {
+        const chat = await client.getChatById(notification.chatId)
 
-        const sender = msg.author || msg.from
-
-        // evita repetir
-        if (greeted.has(sender)) return
-
-        greeted.add(sender)
+        const user = notification.id.participant
 
         await chat.sendMessage(
-`👋 Bem-vindo(a) @${sender.replace("@c.us", "")} à Tropa Pokémon GO! ⚡
+`👋 Bem-vindo(a) @${user.replace("@c.us", "")} à Tropa Pokémon GO! ⚡
 
 🤖 É uma honra ter você aqui!
 
 📌 Leia as regras com atenção
-📜 Digite *regras* para ver as regras`
-        , {
-            mentions: [msg.author]
+📜 Digite *regras* para ver as regras`,
+        {
+            mentions: [user]
         })
+    } catch (err) {
+        console.log("Erro boas-vindas:", err)
     }
-
 })
 
 client.initialize()
