@@ -14,31 +14,38 @@ function formatDuration(milliseconds) {
   return hours ? `${hours}h ${minutes}m` : `${minutes}min ${seconds}s`;
 }
 
+function formatConfiguredTime(milliseconds) {
+  const seconds = Math.max(0, Math.floor(Number(milliseconds || 0) / 1000));
+  if (seconds < 60) return `${seconds} segundo${seconds === 1 ? "" : "s"}`;
+  if (seconds % 60 === 0) { const minutes = seconds / 60; return `${minutes} minuto${minutes === 1 ? "" : "s"}`; }
+  return formatDuration(milliseconds);
+}
+
 function formatProgress(current, total) {
   const size = Math.max(1, Number(total) || 1);
   const completed = Math.min(size, Math.max(0, Number(current) || 0));
   return `${"🟩".repeat(completed)}${"⬜".repeat(size - completed)}`;
 }
 
-function formatStart(total) {
-  return ["🏁 *MARATONA DO QUIZ*", "", `Perguntas: ${total}`, "", "Tempo por pergunta: 2 minutos", "", "Intervalo: 3 segundos", "", "Boa sorte!"].join("\n");
+function formatStart(total, durationMs = 120_000, intervalMs = 3_000) {
+  return ["🏁 *MARATONA DO QUIZ*", "", `Perguntas: ${total}`, "", `Tempo por pergunta: ${formatConfiguredTime(durationMs)}`, "", `Intervalo: ${formatConfiguredTime(intervalMs)}`, "", "Boa sorte!"].join("\n");
 }
 
-function formatQuestion(question, current, total, translateDifficulty) {
+function formatQuestion(question, current, total, translateDifficulty, durationMs = 120_000) {
   const lines = [`🎮 *PERGUNTA ${current}/${total}*`, "", formatProgress(current, total), "", question.prompt];
   if (question.options?.length) lines.push("", ...question.options.map((option) => `${option.key}) ${option.value}`));
-  lines.push("", `🎯 Dificuldade: ${translateDifficulty(question.difficulty)}`, `🏆 Vale: ${question.points} pontos`, "⏳ Tempo: 2 minutos");
+  lines.push("", `🎯 Dificuldade: ${translateDifficulty(question.difficulty)}`, `🏆 Vale: ${question.points} pontos`, `⏳ Tempo: ${formatConfiguredTime(durationMs)}`);
   return lines.join("\n");
 }
 
-function formatCorrectAnswer(name, points, hasNext = true) {
+function formatCorrectAnswer(name, points, hasNext = true, intervalMs = 3_000) {
   const lines = [`🎉 *${safePlayerName(name)} acertou!*`, "", `+${Number(points || 0)} pontos`];
-  if (hasNext) lines.push("", "Próxima pergunta em 3 segundos...");
+  if (hasNext) lines.push("", `Próxima pergunta em ${formatConfiguredTime(intervalMs)}...`);
   return lines.join("\n");
 }
 
-function formatTimeout(hasNext = true) {
-  return hasNext ? "⏳ O tempo acabou!\n\nPróxima pergunta em 3 segundos..." : "⏳ O tempo acabou!";
+function formatTimeout(hasNext = true, intervalMs = 3_000) {
+  return hasNext ? `⏳ O tempo acabou!\n\nPróxima pergunta em ${formatConfiguredTime(intervalMs)}...` : "⏳ O tempo acabou!";
 }
 
 function formatScoreboard(ranking, final = false) {

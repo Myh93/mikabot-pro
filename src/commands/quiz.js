@@ -83,11 +83,11 @@ function createQuizCommand(options = {}) {
           "📊 *SEU PERFIL NO QUIZ*",
           "",
           `🏆 Pontos: ${profile.points}`,
-          `✅ Acertos: ${profile.correctAnswers}`,
+          `✅ Acertos no Quiz: ${profile.correctAnswers}`,
           `❌ Erros: ${profile.wrongAnswers}`,
           `🎮 Partidas: ${profile.gamesPlayed}`,
           `🥇 Vitórias: ${profile.wins}`,
-          `🔥 Sequência atual: ${profile.currentStreak}`,
+          `🔥 Sequência atual no Quiz: ${profile.currentStreak}`,
           `⭐ Melhor sequência: ${profile.bestStreak}`
         ].join("\n"));
       }

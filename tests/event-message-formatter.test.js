@@ -68,13 +68,14 @@ test("confirmações distinguem rascunho, agendamento e publicação", () => {
   assert.match(formatter.formatPrivateConfirmation({ ...event, status: "published" }, { ...options, published: true }), /Publicado[\s\S]*enviado ao grupo/);
 });
 
-test("detalhes administrativos e listagem curta não vazam IDs internos", () => {
+test("detalhes administrativos preservam ID e listagem amigável não o expõe", () => {
   const details = formatter.formatEventDetails(event, options);
   assert.match(details, /DETALHES DO EVENTO[\s\S]*E0003[\s\S]*Área 51[\s\S]*Hoje[\s\S]*20:00/);
   assert.equal(details.includes("@g.us"), false);
   assert.equal(details.includes("@lid"), false);
   const item = formatter.formatEventListItem(event, 1, options);
-  assert.equal(item, "1. E0003 — POKEQUIZ\n   Hoje às 20:00\n   Status: Agendado");
+  assert.equal(item, "1️⃣ POKEQUIZ\n   📅 Hoje às 20:00\n   🎮 Quiz\n   Status: Próximo");
+  assert.equal(item.includes("E0003"), false);
   assert.equal(item.includes(event.description), false);
 });
 

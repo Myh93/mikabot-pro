@@ -13,21 +13,27 @@ function createQuizAnswerHandler(options = {}) {
   const quizRepository = options.quizRepository || quizRepositoryDefault;
   const quizMarathonService = options.quizMarathonService || quizMarathonServiceDefault;
 
-  function safeName(context) {
-    return context.displayName || "Participante";
+  async function winnerName(context, result) {
+    return identityService.resolveDisplayName(result.winnerId, {
+      msg: context.msg || context.message,
+      contact: context.contact,
+      displayName: context.displayName
+    });
   }
 
   async function announceResult(context, result) {
     switch (result?.status) {
       case "correct": {
         const profile = await quizRepository.getUserProfile(context.platform, context.groupId, result.winnerId);
+        const name = await winnerName(context, result);
         const correctAnswer = localeService.translateAnswer(result.round?.displayAnswer || result.round?.question?.displayAnswer || result.round?.acceptedAnswers?.[0] || "resposta correta");
         await context.replyText([
           "🎉 *RESPOSTA CORRETA!*",
           "",
-          `👤 Vencedor: ${safeName(context)}`,
+          `👤 Vencedor: ${name}`,
           `✅ Resposta: ${correctAnswer}`,
           `🏆 Pontos: +${result.pointsAwarded}`,
+          ...(Number(result.pointsPenalty) > 0 ? [`↘️ Ajuste pela tentativa: -${result.pointsPenalty}`] : []),
           `🔥 Sequência: ${profile.currentStreak}`
         ].join("\n"));
         if (result.progression?.leveledUp) {
@@ -37,7 +43,10 @@ function createQuizAnswerHandler(options = {}) {
         return true;
       }
       case "wrong":
-        await context.replyText(`❌ Resposta incorreta. Você ainda tem ${result.attemptsRemaining} tentativa${result.attemptsRemaining === 1 ? "" : "s"}.`);
+        await context.replyText([
+          `❌ Resposta incorreta. Você ainda tem ${result.attemptsRemaining} tentativa${result.attemptsRemaining === 1 ? "" : "s"}.`,
+          ...(Number.isFinite(result.nextAttemptPoints) ? [`🏆 Próxima tentativa vale: ${result.nextAttemptPoints} pontos.`] : [])
+        ].join("\n"));
         return true;
       case "finished":
         if (result.reason === "attempts_exhausted") {

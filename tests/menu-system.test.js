@@ -113,7 +113,7 @@ test("opção inválida mantém menu aberto e mostra mensagem exata", async () =
   assert.ok(await sessionService.getActiveMenu(ctx));
 });
 
-test("número sem menu é ignorado e sessão vencida é informada", async () => {
+test("número sem menu é ignorado e sessão vencida é encerrada silenciosamente", async () => {
   let now = new Date("2026-07-15T20:00:00.000Z");
   const { registry, answer } = fixture({ clock: () => new Date(now), durationMs: 60_000 });
   const ctx = context();
@@ -121,7 +121,7 @@ test("número sem menu é ignorado e sessão vencida é informada", async () => 
   await registry.openMenu("quiz", ctx, member);
   now = new Date("2026-07-15T20:01:01.000Z");
   assert.strictEqual((await answer.handleMenuAnswer({ context: ctx, text: "1", executeCommand: async () => undefined })).status, "expired");
-  assert.match(ctx.replies.at(-1), /Este menu expirou/);
+  assert.doesNotMatch(ctx.replies.at(-1), /Este menu expirou/);
 });
 
 test("usuários, grupos e plataformas ficam isolados com sessões simultâneas", async () => {
@@ -213,7 +213,7 @@ test("fechar aceita aliases universais", async () => {
   }
 });
 
-test("resposta após timeout informa expiração uma vez e não executa ação", async () => {
+test("resposta após timeout encerra a sessão sem interceptar conversa e não executa ação", async () => {
   let now = new Date("2026-07-15T20:00:00.000Z");
   const { registry, answer } = fixture({ clock: () => new Date(now) });
   const ctx = context();
@@ -222,7 +222,7 @@ test("resposta após timeout informa expiração uma vez e não executa ação",
   const commands = [];
   const expired = await answer.handleMenuAnswer({ context: ctx, text: "1", executeCommand: async command => commands.push(command) });
   assert.equal(expired.status, "expired");
-  assert.match(ctx.replies.at(-1), /Este menu expirou/);
+  assert.doesNotMatch(ctx.replies.at(-1), /Este menu expirou/);
   assert.deepEqual(commands, []);
   assert.equal(await answer.hasActiveMenu(ctx), false);
 });
@@ -256,14 +256,14 @@ test("página demonstrativa de segurança não altera configuração real", asyn
   assert.equal((await registry.openMenu("admin.security", ctx, admin)).status, "opened");
 });
 
-test("página informativa mantém a sessão aberta e renova o prazo", async () => {
+test("opção guiada mantém a sessão aberta e renova o prazo", async () => {
   let now = new Date("2026-07-15T20:00:00.000Z");
   const { registry, answer, sessionService } = fixture({ clock: () => new Date(now) });
   const ctx = context();
   const opened = await registry.openMenu("raid", ctx, member);
   now = new Date("2026-07-15T20:01:00.000Z");
   const result = await answer.handleMenuAnswer({ context: ctx, client: {}, msg: {}, text: "Editar Raid", executeCommand: async () => assert.fail("não existe fluxo guiado de edição de Raid") });
-  assert.equal(result.status, "informed");
+  assert.equal(result.status, "prompted");
   const active = await sessionService.getActiveMenu(ctx);
   assert.equal(active.menuId, "raid");
   assert.ok(Date.parse(active.expiresAt) > Date.parse(opened.session.expiresAt));
@@ -311,7 +311,7 @@ test("integrações de Perfil usam os comandos existentes", async () => {
   }
 });
 
-test("Raids integram criação e listagem e preservam como informação as demais ações", async () => {
+test("Raids integram criação, listagem e coletam argumentos das demais ações", async () => {
   const { registry, answer, sessionService } = fixture();
   const ctx = context();
   await registry.openMenu("raid", ctx, member);
@@ -327,8 +327,8 @@ test("Raids integram criação e listagem e preservam como informação as demai
 
   for (const selection of ["Editar Raid", "Cancelar Raid", "Publicar Raid", "Entrar em Raid", "Desistir de Raid", "Ver Participantes"]) {
     await registry.openMenu("raid", ctx, member);
-    const result = await answer.handleMenuAnswer({ context: ctx, client: {}, msg: {}, text: selection, executeCommand: async () => assert.fail("não deve inventar fluxo") });
-    assert.equal(result.status, "informed");
+    const result = await answer.handleMenuAnswer({ context: ctx, client: {}, msg: {}, text: selection, executeCommand: async () => assert.fail("a coleta ainda não executa") });
+    assert.equal(result.status, "prompted");
     assert.ok(await sessionService.getActiveMenu(ctx));
   }
 });
@@ -350,12 +350,12 @@ test("Eventos no privado abrem o menu oficial privado e encaminham fluxos existe
   }
 });
 
-test("Pokémon mantém entradas que exigem pesquisa como informação e executa Pokébola", async () => {
+test("Pokémon coleta pesquisas de forma guiada e executa Pokébola", async () => {
   const { registry, answer, sessionService } = fixture();
   const ctx = context();
   for (const selection of ["Pokédex", "Counters"]) {
     await registry.openMenu("pokemon", ctx, member);
-    assert.equal((await answer.handleMenuAnswer({ context: ctx, client: {}, msg: {}, text: selection, executeCommand: async () => assert.fail("pesquisa exige argumento") })).status, "informed");
+    assert.equal((await answer.handleMenuAnswer({ context: ctx, client: {}, msg: {}, text: selection, executeCommand: async () => assert.fail("a coleta ainda não executa") })).status, "prompted");
     assert.ok(await sessionService.getActiveMenu(ctx));
   }
   await registry.openMenu("pokemon", ctx, member);

@@ -50,8 +50,8 @@ test("backup contém os nove originais e permite restauração validada", () => 
 test("movimentações, limites, contagem, unicidade e ordenação estão corretos", () => {
   const generations = readGenerations();
   const all = generations.flat();
-  assert.strictEqual(all.length, 980);
-  assert.strictEqual(new Set(all.map((pokemon) => pokemon.numero)).size, 980);
+  assert.strictEqual(all.length, manifest.pokemonCount);
+  assert.strictEqual(new Set(all.map((pokemon) => pokemon.numero)).size, manifest.pokemonCount);
   assert.deepStrictEqual(generations[2].filter((pokemon) => pokemon.numero >= 353 && pokemon.numero <= 386).map((pokemon) => pokemon.numero), Array.from({ length: 34 }, (_, index) => 353 + index));
   assert.deepStrictEqual(generations[7].filter((pokemon) => pokemon.numero >= 899 && pokemon.numero <= 905).map((pokemon) => pokemon.numero), Array.from({ length: 7 }, (_, index) => 899 + index));
   manifest.generations.forEach((definition, index) => {
@@ -65,7 +65,7 @@ test("serviço carrega pelo manifesto e reutiliza cache", () => {
   const first = service.loadDataset();
   const second = service.loadDataset();
   assert.strictEqual(first, second);
-  assert.strictEqual(first.pokemon.length, 980);
+  assert.strictEqual(first.pokemon.length, manifest.pokemonCount);
   assert.deepStrictEqual(service.listAvailableGenerations(), [1, 2, 3, 4, 5, 6, 7, 8, 9]);
   assert.strictEqual(service.validateDataset().valid, true);
 });

@@ -11,8 +11,20 @@ const TYPE_LABELS = Object.freeze({
 });
 const STATUS_LABELS = Object.freeze({
   draft: "Rascunho", scheduled: "Agendado", published: "Publicado", running: "Em andamento",
+  upcoming: "Próximo", active: "Ativo", past: "Passado",
   finished: "Finalizado", cancelled: "Cancelado", archived: "Arquivado"
 });
+
+function resolveLifecycleStatus(event, now = new Date()) {
+  if (["cancelled", "finished", "archived", "draft"].includes(event?.status)) return event.status;
+  const reference = now instanceof Date ? now.getTime() : Date.parse(now);
+  const start = Date.parse(event?.startsAt || "");
+  const end = Date.parse(event?.endsAt || "");
+  if (!Number.isFinite(start) || !Number.isFinite(reference)) return event?.status;
+  if (reference < start) return "upcoming";
+  if (Number.isFinite(end) && reference < end) return "active";
+  return "past";
+}
 
 function dateParts(value, timezone) {
   const date = value instanceof Date ? value : new Date(value);
@@ -72,7 +84,7 @@ function formatEventCancelled(event, options = {}) { return wrap("❌ *EVENTO CA
 
 function formatPrivateConfirmation(event, options = {}) {
   const status = options.status || event?.status;
-  const lines = ["✅ *EVENTO CRIADO COM SUCESSO!*", "", titleLine(event), "", `📂 Grupo: ${options.groupName || "Grupo cadastrado"}`, `📅 Data: ${eventDate(event, options)}`, `⏰ Horário: ${eventTime(event, options)}`, `📋 Status: ${formatEventStatus(status)}`, "", `🆔 ID administrativo: ${event?.id}`];
+  const lines = ["✅ *EVENTO CRIADO COM SUCESSO!*", "", titleLine(event), "", `📂 Grupo: ${options.groupName || "Grupo cadastrado"}`, `📅 Data: ${eventDate(event, options)}`, `⏰ Horário: ${eventTime(event, options)}`, `📋 Status: ${formatEventStatus(status)}`];
   if (options.published) lines.push("", "📢 O evento também foi enviado ao grupo.");
   else if (status === "draft") lines.push("", "📝 O evento foi salvo como rascunho.");
   else lines.push("", "⏳ O evento ficou agendado.");
@@ -89,12 +101,13 @@ function formatGuidedReview(data, options = {}) {
 }
 
 function formatEventDetails(event, options = {}) {
-  return ["📅 *DETALHES DO EVENTO*", "", `🆔 ID: ${event?.id}`, `📌 Título: ${event?.title}`, `🎮 Tipo: ${formatEventType(event?.type)}`, `📋 Status: ${formatEventStatus(event?.status)}`, `📂 Grupo: ${options.groupName || "Grupo cadastrado"}`, `📅 Data: ${eventDate(event, options)}`, `⏰ Horário: ${eventTime(event, options)}`, `📝 Descrição: ${event?.description || "Não informada"}`, `🎁 Prêmio: ${event?.prize || "Nenhum"}`].join("\n");
+  const idLine = options.includeAdministrativeId === false ? [] : [`🆔 ID administrativo: ${event?.id}`];
+  return ["📅 *DETALHES DO EVENTO*", "", ...idLine, `📌 Título: ${event?.title}`, `🎮 Tipo: ${formatEventType(event?.type)}`, `📋 Status: ${formatEventStatus(resolveLifecycleStatus(event, options.now || new Date()))}`, `📂 Grupo: ${options.groupName || "Grupo cadastrado"}`, `📅 Data: ${eventDate(event, options)}`, `⏰ Horário: ${eventTime(event, options)}`, `📝 Descrição: ${event?.description || "Não informada"}`, `🎁 Prêmio: ${event?.prize || "Nenhum"}`].join("\n");
 }
 
 function formatEventListItem(event, index, options = {}) {
   const when = event?.startsAt ? `${eventDate(event, options)} às ${eventTime(event, options)}` : "Data não informada";
-  return `${index}. ${event?.id} — ${event?.title}\n   ${when}\n   Status: ${formatEventStatus(event?.status)}`;
+  return `${index}️⃣ ${event?.title}\n   📅 ${when}\n   🎮 ${formatEventType(event?.type)}\n   Status: ${formatEventStatus(resolveLifecycleStatus(event, options.now || new Date()))}`;
 }
 
-module.exports = { DEFAULT_TIMEZONE, TYPE_LABELS, STATUS_LABELS, formatFriendlyDate, formatFriendlyTime, formatEventType, formatEventStatus, formatPublicEvent, formatReminder24h, formatReminder1h, formatReminder30m, formatReminder10m, formatEventStarted, formatEventFinished, formatEventCancelled, formatPrivateConfirmation, formatGuidedReview, formatEventDetails, formatEventListItem };
+module.exports = { DEFAULT_TIMEZONE, TYPE_LABELS, STATUS_LABELS, resolveLifecycleStatus, formatFriendlyDate, formatFriendlyTime, formatEventType, formatEventStatus, formatPublicEvent, formatReminder24h, formatReminder1h, formatReminder30m, formatReminder10m, formatEventStarted, formatEventFinished, formatEventCancelled, formatPrivateConfirmation, formatGuidedReview, formatEventDetails, formatEventListItem };

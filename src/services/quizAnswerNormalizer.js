@@ -3,7 +3,9 @@
 const { normalizeLocalizedAnswer } = require("./pokemonLocaleService");
 
 function normalizeAnswer(value) {
-  return normalizeLocalizedAnswer(value);
+  const raw = String(value ?? "").trim();
+  const isolatedChoice = raw.match(/^([a-e])\s*[,\.]$/i);
+  return normalizeLocalizedAnswer(isolatedChoice ? isolatedChoice[1] : raw);
 }
 
 function buildAcceptedAnswers(primaryAnswers, aliases = []) {

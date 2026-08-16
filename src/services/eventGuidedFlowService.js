@@ -32,7 +32,7 @@ function createEventGuidedFlowService(options = {}) {
   const inputResolver = options.inputResolverService || inputResolverDefault;
 
   function privateContext(context) {
-    return Boolean(context && !context.isGroup && context.conversationId && context.userId);
+    return Boolean(context && context.platform && context.conversationId && context.userId);
   }
 
   async function listManageableGroups(client, identity) {
@@ -133,17 +133,19 @@ function createEventGuidedFlowService(options = {}) {
   }
 
   function eventChoicePrompt(title, list) {
-    return [title, "", ...list.map((event, index) => `${index + 1}️⃣ ${event.id} — ${event.title}`), "", "Responda com o número."].join("\n");
+    return [title, "", ...list.map((event, index) => messageFormatter.formatEventListItem(event, index + 1)), "", "0️⃣ Voltar", "", "Responda com o número."].join("\n");
   }
 
   async function startActionFlow(action, client, context, role = {}) {
     const statusMap = {
       edit_event: ["draft", "scheduled", "published"], publish_event: ["draft", "scheduled"],
-      cancel_event: ["draft", "scheduled", "published", "running"], finish_event: ["published", "running"]
+      cancel_event: ["draft", "scheduled", "published", "running"], finish_event: ["published", "running"],
+      archive_event: ["draft", "scheduled", "published", "running", "finished", "cancelled"],
+      view_event: undefined
     };
     const { groups, list } = await manageableEvents(client, context, role, statusMap[action]);
     if (!list.length) { await reply(context, "❌ Nenhum evento disponível para esta ação."); return { status: "empty" }; }
-    const started = await begin(action, `select_${action}`, { groups, events: list.map((event) => ({ id: event.id, title: event.title, groupId: event.groupId })), role: roleData(role) }, context);
+    const started = await begin(action, `select_${action}`, { groups, events: list.map((event) => ({ id: event.id, title: event.title, type: event.type, startsAt: event.startsAt, endsAt: event.endsAt, status: event.status, timezone: event.timezone, groupId: event.groupId })), role: roleData(role) }, context);
     if (started.status === "started") await reply(context, eventChoicePrompt("📅 *ESCOLHA O EVENTO*", list));
     return started;
   }
@@ -170,6 +172,29 @@ function createEventGuidedFlowService(options = {}) {
     return Number.isInteger(value) && value >= 1 && value <= max ? value : null;
   }
 
+  function editableValue(event, field) {
+    if (field === "titulo") return event.title || "Não informado";
+    if (field === "descricao") return event.description || "Não informada";
+    if (field === "tipo") return messageFormatter.formatEventType(event.type);
+    if (field === "data") return events.formatDateTime(event.startsAt).date;
+    if (field === "hora") return events.formatDateTime(event.startsAt).time;
+    if (field === "termino") { const end = events.formatDateTime(event.endsAt); return event.endsAt ? `${end.date} às ${end.time}` : "Não informado"; }
+    if (field === "premio") return event.prize || "Nenhum";
+    return "Configuração atual preservada";
+  }
+
+  async function applyEditedField(session, context) {
+    const field = session.data.pendingField;
+    const value = session.data.pendingValue;
+    const eventContext = contextFor(session, session.data.eventGroupId);
+    if (field === "avisos") {
+      const event = await events.getEvent(session.data.eventId, eventContext);
+      return events.updateEventData(event.id, { settings: { ...(event.settings || {}), notifications: value.keys } }, eventContext);
+    }
+    if (field === "termino") return events.updateEventEnd(session.data.eventId, value.date, value.time, eventContext);
+    return events.updateEvent(session.data.eventId, field, value, eventContext);
+  }
+
   async function saveCreation(session, context, client, mode) {
     const data = session.data;
     const event = await events.createEvent({
@@ -191,16 +216,16 @@ function createEventGuidedFlowService(options = {}) {
     const value = String(text || "").trim();
     if (session.step === "select_group") {
       const choice = validChoice(value, session.data.groups.length); if (!choice) throw Object.assign(new Error("❌ Escolha um grupo válido pelo número."), { validation: true });
-      const group = session.data.groups[choice - 1]; return advance(session, context, "select_type", { groupId: group.id, groupName: group.name }, typePrompt());
+      const group = session.data.groups[choice - 1]; return advance(session, context, "title", { groupId: group.id, groupName: group.name }, "✏️ Digite o título do evento.\n\nExemplo:\nQuiz Pokémon de Hoje");
     }
     if (session.step === "select_type") {
       const choice = validChoice(value, TYPES.length); if (!choice) throw Object.assign(new Error("❌ Escolha um tipo válido pelo número."), { validation: true });
-      return advance(session, context, "title", { type: TYPES[choice - 1][0], typeLabel: TYPES[choice - 1][1] }, "✏️ Digite o título do evento.\n\nExemplo:\nQuiz Pokémon de Hoje");
+      return advance(session, context, "end_choice", { type: TYPES[choice - 1][0], typeLabel: TYPES[choice - 1][1] }, "⏳ Deseja informar horário de término?\n\n1️⃣ Sim\n2️⃣ Não");
     }
     if (session.step === "title") { if (!value) throw Object.assign(new Error("❌ O título não pode ficar vazio."), { validation: true }); return advance(session, context, "description", { title: value }, "📝 Digite a descrição.\n\nPode escrever do seu jeito."); }
     if (session.step === "description") return advance(session, context, "date", { description: value }, "📅 Digite a data.\n\nExemplos:\nhoje\namanhã\n16/07\n16/07/2026");
     if (session.step === "date") { events.parseDate(value); return advance(session, context, "time", { date: value }, "⏰ Digite o horário.\n\nExemplos:\n20:00\n20h\n20h30"); }
-    if (session.step === "time") { events.parseTime(value); return advance(session, context, "end_choice", { time: value }, "⏳ Deseja informar horário de término?\n\n1️⃣ Sim\n2️⃣ Não"); }
+    if (session.step === "time") { events.parseTime(value); return advance(session, context, "select_type", { time: value }, typePrompt()); }
     if (session.step === "end_choice") { const choice = inputResolver.resolveYesNo(value); if (choice === null) throw Object.assign(new Error("❌ Responda 1 para Sim ou 2 para Não."), { validation: true }); return choice ? advance(session, context, "end_date", {}, "📅 Digite a data de término.") : advance(session, context, "prize_choice", { endDate: null, endTime: null }, "🎁 Vai ter prêmio?\n\n1️⃣ Sim\n2️⃣ Não"); }
     if (session.step === "end_date") { events.parseDate(value); return advance(session, context, "end_time", { endDate: value }, "⏰ Digite o horário de término."); }
     if (session.step === "end_time") {
@@ -242,9 +267,10 @@ function createEventGuidedFlowService(options = {}) {
     if (session.step.startsWith("select_")) {
       const choice = validChoice(value, session.data.events.length); if (!choice) throw Object.assign(new Error("❌ Escolha um evento válido pelo número."), { validation: true });
       const selected = session.data.events[choice - 1];
-      if (session.flowId === "edit_event") return advance(session, context, "edit_menu", { eventId: selected.id, eventGroupId: selected.groupId }, `✏️ *EDITAR EVENTO ${selected.id}*\n\n1️⃣ Título\n2️⃣ Descrição\n3️⃣ Tipo\n4️⃣ Data\n5️⃣ Hora\n6️⃣ Término\n7️⃣ Prêmio\n8️⃣ Avisos\n9️⃣ Grupo\n🔟 Salvar e sair\n1️⃣1️⃣ Cancelar edição`);
+      if (session.flowId === "view_event") { const event = await events.getEvent(selected.id, contextFor(session, selected.groupId)); await flows.finishFlow(...flowArgs(context)); await reply(context, events.formatEvent(event)); return { status: "finished", event }; }
+      if (session.flowId === "edit_event") return advance(session, context, "edit_menu", { eventId: selected.id, eventGroupId: selected.groupId }, `✏️ *EDITAR EVENTO*\n\n${selected.title}\n\n1️⃣ Título\n2️⃣ Descrição\n3️⃣ Tipo\n4️⃣ Data\n5️⃣ Hora\n6️⃣ Término\n7️⃣ Prêmio\n8️⃣ Avisos\n9️⃣ Grupo\n🔟 Salvar e sair\n1️⃣1️⃣ Cancelar edição`);
       const event = await events.getEvent(selected.id, contextFor(session, selected.groupId));
-      const verb = session.flowId === "publish_event" ? "Publicar" : session.flowId === "cancel_event" ? "Cancelar" : "Finalizar";
+      const verb = session.flowId === "publish_event" ? "Publicar" : session.flowId === "cancel_event" ? "Cancelar" : session.flowId === "archive_event" ? "Arquivar" : "Finalizar";
       return advance(session, context, "confirm_action", { eventId: selected.id, eventGroupId: selected.groupId, wasPublished: ["published", "running"].includes(event.status) }, `${events.formatEvent(event)}\n\n1️⃣ ${verb}\n2️⃣ Voltar\n3️⃣ Cancelar`);
     }
     if (session.step === "edit_menu") {
@@ -253,8 +279,11 @@ function createEventGuidedFlowService(options = {}) {
       if (choice === 11) { await flows.cancelFlow(...flowArgs(context)); await reply(context, "❌ Edição cancelada."); return { status: "cancelled" }; }
       if (choice === 9) return advance(session, context, "edit_group", {}, groupPrompt(session.data.groups));
       const fields = ["titulo", "descricao", "tipo", "data", "hora", "termino", "premio", "avisos"];
-      const prompt = choice === 8 ? noticePrompt() : choice === 6 ? "Digite o término como DATA | HORA. Exemplo: 17/07/2026 | 22h. Envie não para remover." : "Digite o novo valor.";
-      return advance(session, context, `edit_field_${fields[choice - 1]}`, {}, prompt);
+      const field = fields[choice - 1];
+      const event = await events.getEvent(session.data.eventId, contextFor(session, session.data.eventGroupId));
+      const instruction = choice === 8 ? noticePrompt() : choice === 6 ? "Digite o término como DATA | HORA. Exemplo: 17/07/2026 | 22h. Envie não para remover." : "Digite o novo valor.";
+      const prompt = `Valor atual:\n${editableValue(event, field)}\n\n${instruction}`;
+      return advance(session, context, `edit_field_${field}`, {}, prompt);
     }
     if (session.step === "edit_group") {
       const choice = validChoice(value, session.data.groups.length); if (!choice) throw Object.assign(new Error("❌ Escolha um grupo válido."), { validation: true });
@@ -264,17 +293,30 @@ function createEventGuidedFlowService(options = {}) {
     }
     if (session.step.startsWith("edit_field_")) {
       const field = session.step.slice("edit_field_".length);
+      let pendingValue = value;
       if (field === "avisos") {
         const selected = NOTICE_OPTIONS[value]; if (!selected) throw Object.assign(new Error("❌ Escolha uma opção de avisos entre 1 e 5."), { validation: true });
-        const event = await events.getEvent(session.data.eventId, contextFor(session, session.data.eventGroupId));
-        await events.updateEventData(event.id, { settings: { ...(event.settings || {}), notifications: selected.keys } }, contextFor(session, session.data.eventGroupId));
+        pendingValue = selected;
       } else if (field === "termino") {
         const remove = inputResolver.resolveYesNo(value) === false;
         const [date, time] = remove ? [null, null] : value.split("|").map((item) => item.trim());
         if (!remove && (!date || !time)) throw Object.assign(new Error("❌ Use DATA | HORA para definir o término."), { validation: true });
-        await events.updateEventEnd(session.data.eventId, date, time, contextFor(session, session.data.eventGroupId));
-      } else await events.updateEvent(session.data.eventId, field, value, contextFor(session, session.data.eventGroupId));
-      return advance(session, context, "edit_menu", {}, "✅ Campo atualizado.\n\nEnvie 10 para salvar e sair ou escolha outro campo.");
+        if (!remove) { events.parseDate(date); events.parseTime(time); }
+        pendingValue = { date, time };
+      } else {
+        if (field === "data") events.parseDate(value);
+        if (field === "hora") events.parseTime(value);
+        if (["titulo", "tipo"].includes(field) && !value) throw Object.assign(new Error("❌ Este campo não pode ficar vazio."), { validation: true });
+      }
+      const shown = field === "avisos" ? pendingValue.label : field === "termino" ? (pendingValue.date ? `${pendingValue.date} às ${pendingValue.time}` : "Não informado") : value;
+      return advance(session, context, "edit_review", { pendingField: field, pendingValue }, `📋 *REVISÃO DA ALTERAÇÃO*\n\nNovo valor:\n${shown}\n\n1️⃣ Confirmar\n2️⃣ Voltar\n3️⃣ Cancelar edição`);
+    }
+    if (session.step === "edit_review") {
+      const choice = validChoice(value, 3); if (!choice) throw Object.assign(new Error("❌ Escolha uma opção entre 1 e 3."), { validation: true });
+      if (choice === 2) return advance(session, context, "edit_menu", { pendingField: null, pendingValue: null }, "↩️ Alteração descartada. Escolha outro campo.");
+      if (choice === 3) { await flows.cancelFlow(...flowArgs(context)); await reply(context, "❌ Edição cancelada."); return { status: "cancelled" }; }
+      await applyEditedField(session, context);
+      return advance(session, context, "edit_menu", { pendingField: null, pendingValue: null }, "✅ Campo atualizado.\n\nEnvie 10 para salvar e sair ou escolha outro campo.");
     }
     if (session.step === "confirm_action") {
       const choice = validChoice(value, 3); if (!choice) throw Object.assign(new Error("❌ Escolha uma opção entre 1 e 3."), { validation: true });
@@ -288,7 +330,8 @@ function createEventGuidedFlowService(options = {}) {
         if (session.data.wasPublished) await client.sendMessage(before.groupId, messageFormatter.formatEventCancelled(before));
       }
       if (session.flowId === "finish_event") { const before = await events.getEvent(session.data.eventId, eventContext); event = await events.finishEvent(session.data.eventId, eventContext); await client.sendMessage(before.groupId, messageFormatter.formatEventFinished(before)); }
-      await flows.finishFlow(...flowArgs(context)); await reply(context, `✅ Ação concluída no evento ${event.id}.`); return { status: "finished", event };
+      if (session.flowId === "archive_event") event = await events.archiveEvent(session.data.eventId, eventContext);
+      await flows.finishFlow(...flowArgs(context)); await reply(context, `✅ Ação concluída: ${event.title}.`); return { status: "finished", event };
     }
     return { status: "ignored" };
   }

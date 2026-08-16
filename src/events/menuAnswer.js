@@ -14,20 +14,34 @@ function createMenuAnswerHandler(options = {}) {
   async function hasActiveMenu(context) {
     if (!isCompletePlatformContext(context)) return false;
     const state = await sessionService.getMenuState(context);
-    return state.status === "active" || state.status === "expired";
+    if (state.status === "expired") await sessionService.expireMenu(context);
+    return state.status === "active";
   }
 
   async function handleMenuAnswer({ context, client, msg, text, executeCommand }) {
     if (!isCompletePlatformContext(context)) return { status: "ignored" };
     try {
       const state = await sessionService.getMenuState(context);
-      if (state.status === "expired") {
-        await sessionService.expireMenu(context);
-        await context.replyText("⏳ Este menu expirou.\n\nDigite !menu para abrir novamente.");
-        return { status: "expired" };
-      }
+      if (state.status === "expired") { await sessionService.expireMenu(context); return { status: "expired" }; }
       if (state.status !== "active") return { status: "ignored" };
       const active = state.session;
+      if (active.pendingPrompt?.command) {
+        const navigation = inputResolver.resolveMenuNavigation(text, { canGoBack: true });
+        if (navigation === "close") {
+          await sessionService.closeMenu(context);
+          await context.replyText("✅ Menu fechado.");
+          return { status: "closed" };
+        }
+        if (navigation === "back") {
+          const role = await registry.resolveRole(client, msg, {});
+          return registry.openMenu(active.menuId, context, role, { stack: active.stack, targetGroupId: active.targetGroupId });
+        }
+        const value = String(text || "").trim();
+        if (!value) return { status: "ignored" };
+        await sessionService.closeMenu(context);
+        await executeCommand(`${active.pendingPrompt.command} ${value}`);
+        return { status: "executed_prompt", command: active.pendingPrompt.command };
+      }
       const fallbackParent = registry.parentMenuId(active.menuId);
       const canGoBack = Boolean((active.stack || []).length || fallbackParent);
       const navigation = inputResolver.resolveMenuNavigation(text, { canGoBack });
@@ -73,6 +87,12 @@ function createMenuAnswerHandler(options = {}) {
         if (!renewed) return { status: "ignored" };
         await context.replyText(option.info);
         return { status: "informed", option, session: renewed };
+      }
+      if (option.prompt && option.command) {
+        const prompted = await sessionService.beginPrompt(context, option, option.prompt);
+        if (!prompted) return { status: "ignored" };
+        await context.replyText(option.prompt);
+        return { status: "prompted", option, session: prompted };
       }
       const selection = await sessionService.selectOption(context, String(optionKey));
       if (selection.status !== "selected") return selection;

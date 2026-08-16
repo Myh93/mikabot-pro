@@ -1,0 +1,751 @@
+[
+  {
+    "numero": 1,
+    "nome": "Bulbasaur",
+    "tipo": ["Grass", "Poison"],
+    "fraquezas": ["Fire", "Ice", "Flying", "Psychic"],
+    "descricao": "Bulbasaur é um Pokémon inicial de Kanto. Possui uma semente nas costas que cresce conforme evolui."
+  },
+  {
+    "numero": 2,
+    "nome": "Ivysaur",
+    "tipo": ["Grass", "Poison"],
+    "fraquezas": ["Fire", "Ice", "Flying", "Psychic"],
+    "descricao": "Ivysaur é a evolução de Bulbasaur. A planta em suas costas floresce conforme cresce."
+  },
+  {
+    "numero": 3,
+    "nome": "Venusaur",
+    "tipo": ["Grass", "Poison"],
+    "fraquezas": ["Fire", "Ice", "Flying", "Psychic"],
+    "descricao": "Venusaur é a forma final de Bulbasaur. A flor em suas costas libera um aroma que acalma os seres vivos."
+  },
+  {
+    "numero": 4,
+    "nome": "Charmander",
+    "tipo": ["Fire"],
+    "fraquezas": ["Water", "Ground", "Rock"],
+    "descricao": "Charmander é um dos Pokémon iniciais de Kanto. Sua cauda tem uma chama que nunca se apaga."
+  },
+  {
+    "numero": 5,
+    "nome": "Charmeleon",
+    "tipo": ["Fire"],
+    "fraquezas": ["Water", "Ground", "Rock"],
+    "descricao": "Charmeleon é a evolução de Charmander. É temperamental e usa sua cauda flamejante em batalhas."
+  },
+  {
+    "numero": 6,
+    "nome": "Charizard",
+    "tipo": ["Fire", "Flying"],
+    "fraquezas": ["Water", "Electric", "Rock"],
+    "descricao": "Charizard é a forma final de Charmander. Ele cospe fogo intenso e pode voar pelos céus."
+  },
+  {
+    "numero": 7,
+    "nome": "Squirtle",
+    "tipo": ["Water"],
+    "fraquezas": ["Electric", "Grass"],
+    "descricao": "Squirtle é um Pokémon inicial de Kanto. Usa seu casco para se proteger e dispara jatos d’água."
+  },
+  {
+    "numero": 8,
+    "nome": "Wartortle",
+    "tipo": ["Water"],
+    "fraquezas": ["Electric", "Grass"],
+    "descricao": "Wartortle é a evolução de Squirtle. Suas orelhas e cauda peluda simbolizam longevidade."
+  },
+  {
+    "numero": 9,
+    "nome": "Blastoise",
+    "tipo": ["Water"],
+    "fraquezas": ["Electric", "Grass"],
+    "descricao": "Blastoise é a forma final de Squirtle. Possui canhões de água em seu casco que disparam jatos poderosos."
+  },
+  {
+    "numero": 10,
+    "nome": "Caterpie",
+    "tipo": ["Bug"],
+    "fraquezas": ["Fire", "Flying", "Rock"],
+    "descricao": "Caterpie é um Pokémon larva que se alimenta de folhas. Evolui rapidamente."
+  },
+  {
+    "numero": 11,
+    "nome": "Metapod",
+    "tipo": ["Bug"],
+    "fraquezas": ["Fire", "Flying", "Rock"],
+    "descricao": "Metapod é a evolução de Caterpie. Seu corpo é duro como uma casca."
+  },
+  {
+    "numero": 12,
+    "nome": "Butterfree",
+    "tipo": ["Bug", "Flying"],
+    "fraquezas": ["Fire", "Electric", "Flying", "Rock", "Ice"],
+    "descricao": "Butterfree é a forma final de Caterpie. Suas asas liberam pó venenoso."
+  },
+  {
+    "numero": 13,
+    "nome": "Weedle",
+    "tipo": ["Bug", "Poison"],
+    "fraquezas": ["Fire", "Flying", "Psychic", "Rock"],
+    "descricao": "Weedle é um Pokémon larva com ferrão venenoso na cabeça."
+  },
+  {
+    "numero": 14,
+    "nome": "Kakuna",
+    "tipo": ["Bug", "Poison"],
+    "fraquezas": ["Fire", "Flying", "Psychic", "Rock"],
+    "descricao": "Kakuna é a evolução de Weedle. Fica imóvel enquanto se prepara para evoluir."
+  },
+  {
+    "numero": 15,
+    "nome": "Beedrill",
+    "tipo": ["Bug", "Poison"],
+    "fraquezas": ["Fire", "Flying", "Psychic", "Rock"],
+    "descricao": "Beedrill é a forma final de Weedle. Possui ferrões afiados e é muito agressivo."
+  },
+  {
+    "numero": 16,
+    "nome": "Pidgey",
+    "tipo": ["Normal", "Flying"],
+    "fraquezas": ["Electric", "Rock", "Ice"],
+    "descricao": "Pidgey é um pássaro pequeno e dócil que vive em florestas e cidades."
+  },
+  {
+    "numero": 17,
+    "nome": "Pidgeotto",
+    "tipo": ["Normal", "Flying"],
+    "fraquezas": ["Electric", "Rock", "Ice"],
+    "descricao": "Pidgeotto é a evolução de Pidgey. É territorial e protege sua área de intrusos."
+  },
+  {
+    "numero": 18,
+    "nome": "Pidgeot",
+    "tipo": ["Normal", "Flying"],
+    "fraquezas": ["Electric", "Rock", "Ice"],
+    "descricao": "Pidgeot é a forma final de Pidgey. Suas asas permitem voar em alta velocidade."
+  },
+  {
+    "numero": 19,
+    "nome": "Rattata",
+    "tipo": ["Normal"],
+    "fraquezas": ["Fighting"],
+    "descricao": "Rattata é um roedor rápido e adaptável que vive em qualquer ambiente."
+  },
+  {
+    "numero": 20,
+    "nome": "Raticate",
+    "tipo": ["Normal"],
+    "fraquezas": ["Fighting"],
+    "descricao": "Raticate é a evolução de Rattata. Seus dentes crescem constantemente e precisam ser desgastados."
+  },
+  {
+    "numero": 25,
+    "nome": "Pikachu",
+    "tipo": ["Electric"],
+    "fraquezas": ["Ground"],
+    "descricao": "Pikachu é um Pokémon elétrico da região de Kanto. Armazena eletricidade nas bolsas de suas bochechas."
+  },
+  {
+    "numero": 66,
+    "nome": "Machop",
+    "tipo": ["Fighting"],
+    "fraquezas": ["Psychic", "Flying", "Fairy"],
+    "descricao": "Machop treina constantemente seus músculos e é muito disciplinado."
+  },
+  {
+    "numero": 67,
+    "nome": "Machoke",
+    "tipo": ["Fighting"],
+    "fraquezas": ["Psychic", "Flying", "Fairy"],
+    "descricao": "Machoke é a evolução de Machop. Usa um cinto especial para controlar sua força."
+  },
+  {
+    "numero": 68,
+    "nome": "Machamp",
+    "tipo": ["Fighting"],
+    "fraquezas": ["Psychic", "Flying", "Fairy"],
+    "descricao": "Machamp é a forma final de Machop. Possui quatro braços e força incrível."
+  },
+  {
+    "numero": 69,
+    "nome": "Bellsprout",
+    "tipo": ["Grass", "Poison"],
+    "fraquezas": ["Fire", "Ice", "Flying", "Psychic"],
+    "descricao": "Bellsprout é uma planta flexível que captura presas com suas raízes."
+  },
+  {
+    "numero": 70,
+    "nome": "Weepinbell",
+    "tipo": ["Grass", "Poison"],
+    "fraquezas": ["Fire", "Ice", "Flying", "Psychic"],
+    "descricao": "Weepinbell é a evolução de Bellsprout. Seu corpo libera ácido corrosivo."
+  },
+  {
+    "numero": 71,
+    "nome": "Victreebel",
+    "tipo": ["Grass", "Poison"],
+    "fraquezas": ["Fire", "Ice", "Flying", "Psychic"],
+    "descricao": "Victreebel é a forma final de Bellsprout. Atrai presas com aroma doce e as dissolve."
+  },
+  {
+    "numero": 72,
+    "nome": "Tentacool",
+    "tipo": ["Water", "Poison"],
+    "fraquezas": ["Electric", "Ground", "Psychic"],
+    "descricao": "Tentacool é uma água-viva que flutua nos mares e libera toxinas."
+  },
+  {
+    "numero": 73,
+    "nome": "Tentacruel",
+    "tipo": ["Water", "Poison"],
+    "fraquezas": ["Electric", "Ground", "Psychic"],
+    "descricao": "Tentacruel é a evolução de Tentacool. Possui muitos tentáculos venenosos."
+  },
+  {
+    "numero": 74,
+    "nome": "Geodude",
+    "tipo": ["Rock", "Ground"],
+    "fraquezas": ["Water", "Grass", "Ice", "Fighting", "Ground", "Steel"],
+    "descricao": "Geodude é uma rocha viva que aparece em estradas e montanhas."
+  },
+  {
+    "numero": 75,
+    "nome": "Graveler",
+    "tipo": ["Rock", "Ground"],
+    "fraquezas": ["Water", "Grass", "Ice", "Fighting", "Ground", "Steel"],
+    "descricao": "Graveler é a evolução de Geodude. Rola montanha abaixo esmagando tudo."
+  },
+  {
+    "numero": 76,
+    "nome": "Golem",
+    "tipo": ["Rock", "Ground"],
+    "fraquezas": ["Water", "Grass", "Ice", "Fighting", "Ground", "Steel"],
+    "descricao": "Golem é a forma final de Geodude. Seu corpo é duro como pedra."
+  },
+  {
+    "numero": 77,
+    "nome": "Ponyta",
+    "tipo": ["Fire"],
+    "fraquezas": ["Water", "Rock", "Ground"],
+    "descricao": "Ponyta é um cavalo de fogo com crina flamejante."
+  },
+  {
+    "numero": 78,
+    "nome": "Rapidash",
+    "tipo": ["Fire"],
+    "fraquezas": ["Water", "Rock", "Ground"],
+    "descricao": "Rapidash é a evolução de Ponyta. Corre em alta velocidade com sua crina flamejante."
+  },
+  {
+    "numero": 79,
+    "nome": "Slowpoke",
+    "tipo": ["Water", "Psychic"],
+    "fraquezas": ["Electric", "Grass", "Bug", "Ghost", "Dark"],
+    "descricao": "Slowpoke é lento e distraído, mas usa sua cauda para pescar."
+  },
+  {
+    "numero": 80,
+    "nome": "Slowbro",
+    "tipo": ["Water", "Psychic"],
+    "fraquezas": ["Electric", "Grass", "Bug", "Ghost", "Dark"],
+    "descricao": "Slowbro é a evolução de Slowpoke. Um Shellder mordeu sua cauda e eles vivem juntos."
+  },
+  {
+    "numero": 81,
+    "nome": "Magnemite",
+    "tipo": ["Electric", "Steel"],
+    "fraquezas": ["Fire", "Fighting", "Ground"],
+    "descricao": "Magnemite é um Pokémon magnético que flutua usando eletromagnetismo."
+  },
+  {
+    "numero": 82,
+    "nome": "Magneton",
+    "tipo": ["Electric", "Steel"],
+    "fraquezas": ["Fire", "Fighting", "Ground"],
+    "descricao": "Magneton é a evolução de Magnemite. São três Magnemite unidos."
+  },
+  {
+    "numero": 83,
+    "nome": "Farfetch’d",
+    "tipo": ["Normal", "Flying"],
+    "fraquezas": ["Electric", "Rock", "Ice"],
+    "descricao": "Farfetch’d carrega um talo de alho-poró que usa como arma."
+  },
+  {
+    "numero": 84,
+    "nome": "Doduo",
+    "tipo": ["Normal", "Flying"],
+    "fraquezas": ["Electric", "Rock", "Ice"],
+    "descricao": "Doduo é um pássaro com duas cabeças que corre velozmente."
+  },
+  {
+    "numero": 85,
+    "nome": "Dodrio",
+    "tipo": ["Normal", "Flying"],
+    "fraquezas": ["Electric", "Rock", "Ice"],
+    "descricao": "Dodrio é a evolução de Doduo. Possui três cabeças e é ainda mais rápido."
+  },
+  {
+    "numero": 86,
+    "nome": "Seel",
+    "tipo": ["Water"],
+    "fraquezas": ["Electric", "Grass"],
+    "descricao": "Seel é uma foca que adora nadar em águas geladas."
+  },
+  {
+    "numero": 87,
+    "nome": "Dewgong",
+    "tipo": ["Water", "Ice"],
+    "fraquezas": ["Electric", "Grass", "Fighting", "Rock"],
+    "descricao": "Dewgong é a evolução de Seel. Nada em mares gelados com agilidade."
+  },
+  {
+    "numero": 88,
+    "nome": "Grimer",
+    "tipo": ["Poison"],
+    "fraquezas": ["Ground", "Psychic"],
+    "descricao": "Grimer é feito de lodo tóxico e polui tudo por onde passa."
+  },
+  {
+    "numero": 89,
+    "nome": "Muk",
+    "tipo": ["Poison"],
+    "fraquezas": ["Ground", "Psychic"],
+    "descricao": "Muk é a evolução de Grimer. Seu corpo exala veneno poderoso."
+  },
+  {
+    "numero": 90,
+    "nome": "Shellder",
+    "tipo": ["Water"],
+    "fraquezas": ["Electric", "Grass"],
+    "descricao": "Shellder é um molusco que se fecha em sua concha para se proteger."
+  },
+  {
+    "numero": 91,
+    "nome": "Cloyster",
+    "tipo": ["Water", "Ice"],
+    "fraquezas": ["Electric", "Grass", "Fighting", "Rock"],
+    "descricao": "Cloyster é a evolução de Shellder. Sua concha é quase impenetrável."
+  },
+  {
+    "numero": 92,
+    "nome": "Gastly",
+    "tipo": ["Ghost", "Poison"],
+    "fraquezas": ["Ghost", "Psychic", "Dark"],
+    "descricao": "Gastly é um gás fantasmagórico que assusta seus inimigos."
+  },
+  {
+    "numero": 93,
+    "nome": "Haunter",
+    "tipo": ["Ghost", "Poison"],
+    "fraquezas": ["Ghost", "Psychic", "Dark"],
+    "descricao": "Haunter é a evolução de Gastly. Suas mãos flutuantes podem causar medo."
+  },
+  {
+    "numero": 94,
+    "nome": "Gengar",
+    "tipo": ["Ghost", "Poison"],
+    "fraquezas": ["Ghost", "Psychic", "Dark"],
+    "descricao": "Gengar é a forma final de Gastly. Adora se esconder nas sombras."
+  },
+  {
+    "numero": 95,
+    "nome": "Onix",
+    "tipo": ["Rock", "Ground"],
+    "fraquezas": ["Water", "Grass", "Ice", "Fighting", "Ground", "Steel"],
+    "descricao": "Onix é uma serpente de rocha que vive em cavernas."
+  },
+  {
+    "numero": 96,
+    "nome": "Drowzee",
+    "tipo": ["Psychic"],
+    "fraquezas": ["Bug", "Ghost", "Dark"],
+    "descricao": "Drowzee hipnotiza inimigos e se alimenta de sonhos."
+  },
+  {
+    "numero": 97,
+    "nome": "Hypno",
+    "tipo": ["Psychic"],
+    "fraquezas": ["Bug", "Ghost", "Dark"],
+    "descricao": "Hypno é a evolução de Drowzee. Usa seu pêndulo para controlar mentes."
+  },
+  {
+    "numero": 98,
+    "nome": "Krabby",
+    "tipo": ["Water"],
+    "fraquezas": ["Electric", "Grass"],
+    "descricao": "Krabby é um caranguejo que vive em praias e usa suas pinças para se defender."
+  },
+  {
+    "numero": 99,
+    "nome": "Kingler",
+    "tipo": ["Water"],
+    "fraquezas": ["Electric", "Grass"],
+    "descricao": "Kingler é a evolução de Krabby. Sua pinça gigante é extremamente poderosa."
+  },
+  {
+    "numero": 100,
+    "nome": "Voltorb",
+    "tipo": ["Electric"],
+    "fraquezas": ["Ground"],
+    "descricao": "Voltorb parece uma Pokébola e explode quando ameaçado."
+  },
+  {
+    "numero": 101,
+    "nome": "Electrode",
+    "tipo": ["Electric"],
+    "fraquezas": ["Ground"],
+    "descricao": "Electrode é a evolução de Voltorb. É rápido e explode facilmente."
+  },
+  {
+    "numero": 102,
+    "nome": "Exeggcute",
+    "tipo": ["Grass", "Psychic"],
+    "fraquezas": ["Fire", "Ice", "Poison", "Flying", "Bug", "Dark", "Ghost"],
+    "descricao": "Exeggcute é um grupo de ovos que pensa em conjunto."
+  },
+  {
+    "numero": 103,
+    "nome": "Exeggutor",
+    "tipo": ["Grass", "Psychic"],
+    "fraquezas": ["Fire", "Ice", "Poison", "Flying", "Bug", "Dark", "Ghost"],
+    "descricao": "Exeggutor é a evolução de Exeggcute. Parece uma palmeira com várias cabeças."
+  },
+  {
+    "numero": 104,
+    "nome": "Cubone",
+    "tipo": ["Ground"],
+    "fraquezas": ["Water", "Ice", "Grass"],
+    "descricao": "Cubone usa o crânio da mãe como capacete e chora à noite."
+  },
+  {
+    "numero": 105,
+    "nome": "Marowak",
+    "tipo": ["Ground"],
+    "fraquezas": ["Water", "Ice", "Grass"],
+    "descricao": "Marowak é a evolução de Cubone. Usa seu osso como arma."
+  },
+  {
+  "numero": 106,
+  "nome": "Hitmonlee",
+  "tipo": ["Fighting"],
+  "fraquezas": ["Flying", "Psychic", "Fairy"],
+  "descricao": "Hitmonlee é conhecido como o Pokémon Chutador. Suas pernas podem se esticar e encolher, permitindo chutes devastadores e precisos."
+  },
+  {
+    "numero": 107,
+    "nome": "Hitmonchan",
+    "tipo": ["Fighting"],
+    "fraquezas": ["Psychic", "Flying", "Fairy"],
+    "descricao": "Hitmonchan é especialista em socos rápidos e precisos."
+  },
+  {
+    "numero": 108,
+    "nome": "Lickitung",
+    "tipo": ["Normal"],
+    "fraquezas": ["Fighting"],
+    "descricao": "Lickitung possui uma língua enorme que usa para atacar."
+  },
+  {
+    "numero": 109,
+    "nome": "Koffing",
+    "tipo": ["Poison"],
+    "fraquezas": ["Ground", "Psychic"],
+    "descricao": "Koffing flutua liberando gases venenosos."
+  },
+  {
+    "numero": 110,
+    "nome": "Weezing",
+    "tipo": ["Poison"],
+    "fraquezas": ["Ground", "Psychic"],
+    "descricao": "Weezing é a evolução de Koffing. Possui dois corpos unidos que exalam veneno."
+  },
+  {
+    "numero": 111,
+    "nome": "Rhyhorn",
+    "tipo": ["Ground", "Rock"],
+    "fraquezas": ["Water", "Grass", "Ice", "Fighting", "Steel", "Ground"],
+    "descricao": "Rhyhorn é um Pokémon rinoceronte com corpo resistente."
+  },
+  {
+    "numero": 112,
+    "nome": "Rhydon",
+    "tipo": ["Ground", "Rock"],
+    "fraquezas": ["Water", "Grass", "Ice", "Fighting", "Steel", "Ground"],
+    "descricao": "Rhydon é a evolução de Rhyhorn. Anda em duas patas e é muito forte."
+  },
+  {
+    "numero": 113,
+    "nome": "Chansey",
+    "tipo": ["Normal"],
+    "fraquezas": ["Fighting"],
+    "descricao": "Chansey carrega um ovo que compartilha com quem precisa."
+  },
+  {
+    "numero": 114,
+    "nome": "Tangela",
+    "tipo": ["Grass"],
+    "fraquezas": ["Fire", "Ice", "Flying", "Poison", "Bug"],
+    "descricao": "Tangela é coberto por vinhas que se regeneram rapidamente."
+  },
+  {
+    "numero": 115,
+    "nome": "Kangaskhan",
+    "tipo": ["Normal"],
+    "fraquezas": ["Fighting"],
+    "descricao": "Kangaskhan é um Pokémon marsupial que protege ferozmente seu filhote."
+  },
+  {
+    "numero": 116,
+    "nome": "Horsea",
+    "tipo": ["Water"],
+    "fraquezas": ["Electric", "Grass"],
+    "descricao": "Horsea é um cavalo-marinho que dispara jatos d’água."
+  },
+  {
+    "numero": 117,
+    "nome": "Seadra",
+    "tipo": ["Water"],
+    "fraquezas": ["Electric", "Grass"],
+    "descricao": "Seadra é a evolução de Horsea. Seus espinhos são venenosos."
+  },
+  {
+    "numero": 118,
+    "nome": "Goldeen",
+    "tipo": ["Water"],
+    "fraquezas": ["Electric", "Grass"],
+    "descricao": "Goldeen é um peixe elegante que nada graciosamente."
+  },
+  {
+    "numero": 119,
+    "nome": "Seaking",
+    "tipo": ["Water"],
+    "fraquezas": ["Electric", "Grass"],
+    "descricao": "Seaking é a evolução de Goldeen. É forte e territorial."
+  },
+  {
+    "numero": 120,
+    "nome": "Staryu",
+    "tipo": ["Water"],
+    "fraquezas": ["Electric", "Grass"],
+    "descricao": "Staryu é uma estrela-do-mar que brilha com seu núcleo vermelho."
+  },
+  {
+    "numero": 121,
+    "nome": "Starmie",
+    "tipo": ["Water", "Psychic"],
+    "fraquezas": ["Electric", "Grass", "Bug", "Ghost", "Dark"],
+    "descricao": "Starmie é a evolução de Staryu. Seu núcleo emite luz misteriosa."
+  },
+  {
+    "numero": 122,
+    "nome": "Mr. Mime",
+    "tipo": ["Psychic", "Fairy"],
+    "fraquezas": ["Steel", "Poison", "Ghost"],
+    "descricao": "Mr. Mime cria barreiras invisíveis com suas mãos."
+  },
+  {
+    "numero": 123,
+    "nome": "Scyther",
+    "tipo": ["Bug", "Flying"],
+    "fraquezas": ["Fire", "Electric", "Rock", "Ice"],
+    "descricao": "Scyther é um inseto veloz com lâminas afiadas."
+  },
+  {
+    "numero": 124,
+    "nome": "Jynx",
+    "tipo": ["Ice", "Psychic"],
+    "fraquezas": ["Fire", "Rock", "Bug", "Ghost", "Dark", "Steel"],
+    "descricao": "Jynx possui aparência humana e usa poderes psíquicos e gelo."
+  },
+  {
+    "numero": 125,
+    "nome": "Electabuzz",
+    "tipo": ["Electric"],
+    "fraquezas": ["Ground"],
+    "descricao": "Electabuzz gera eletricidade e causa apagões em cidades."
+  },
+  {
+    "numero": 126,
+    "nome": "Magmar",
+    "tipo": ["Fire"],
+    "fraquezas": ["Water", "Rock", "Ground"],
+    "descricao": "Magmar vive em vulcões e possui corpo flamejante."
+  },
+  {
+    "numero": 127,
+    "nome": "Pinsir",
+    "tipo": ["Bug"],
+    "fraquezas": ["Fire", "Flying", "Rock"],
+    "descricao": "Pinsir possui mandíbulas poderosas que esmagam inimigos."
+  },
+  {
+    "numero": 128,
+    "nome": "Tauros",
+    "tipo": ["Normal"],
+    "fraquezas": ["Fighting"],
+    "descricao": "Tauros é um touro selvagem que corre em manada."
+  },
+  {
+    "numero": 129,
+    "nome": "Magikarp",
+    "tipo": ["Water"],
+    "fraquezas": ["Electric", "Grass"],
+    "descricao": "Magikarp é fraco e só sabe saltar, mas evolui para algo poderoso."
+  },
+  {
+    "numero": 130,
+    "nome": "Gyarados",
+    "tipo": ["Water", "Flying"],
+    "fraquezas": ["Electric", "Rock"],
+    "descricao": "Gyarados é a evolução de Magikarp. É feroz e destrutivo."
+  },
+  {
+    "numero": 131,
+    "nome": "Lapras",
+    "tipo": ["Water", "Ice"],
+    "fraquezas": ["Electric", "Grass", "Rock", "Fighting"],
+    "descricao": "Lapras é gentil e transporta pessoas sobre seu casco."
+  },
+  {
+    "numero": 132,
+    "nome": "Ditto",
+    "tipo": ["Normal"],
+    "fraquezas": ["Fighting"],
+    "descricao": "Ditto pode se transformar em qualquer Pokémon que vê."
+  },
+  {
+    "numero": 133,
+    "nome": "Eevee",
+    "tipo": ["Normal"],
+    "fraquezas": ["Fighting"],
+    "descricao": "Eevee possui genética instável que permite várias evoluções."
+  },
+  {
+    "numero": 134,
+    "nome": "Vaporeon",
+    "tipo": ["Water"],
+    "fraquezas": ["Electric", "Grass"],
+    "descricao": "Vaporeon é uma evolução de Eevee. Seu corpo se mistura com a água."
+  },
+  {
+    "numero": 135,
+    "nome": "Jolteon",
+    "tipo": ["Electric"],
+    "fraquezas": ["Ground"],
+    "descricao": "Jolteon é uma evolução de Eevee. Seu corpo gera eletricidade estática."
+  },
+  {
+    "numero": 136,
+    "nome": "Flareon",
+    "tipo": ["Fire"],
+    "fraquezas": ["Water", "Rock", "Ground"],
+    "descricao": "Flareon é uma evolução de Eevee. Seu corpo armazena calor intenso."
+  },
+  {
+    "numero": 137,
+    "nome": "Porygon",
+    "tipo": ["Normal"],
+    "fraquezas": ["Fighting"],
+    "descricao": "Porygon é um Pokémon virtual criado por computador."
+  },
+  {
+    "numero": 138,
+    "nome": "Omanyte",
+    "tipo": ["Rock", "Water"],
+    "fraquezas": ["Grass", "Electric", "Fighting", "Ground"],
+    "descricao": "Omanyte é um fóssil revivido de um molusco antigo."
+  },
+  {
+    "numero": 139,
+    "nome": "Omastar",
+    "tipo": ["Rock", "Water"],
+    "fraquezas": ["Grass", "Electric", "Fighting", "Ground"],
+    "descricao": "Omastar é a evolução de Omanyte. Usa seus tentáculos para capturar presas."
+  },
+  {
+    "numero": 140,
+    "nome": "Kabuto",
+    "tipo": ["Rock", "Water"],
+    "fraquezas": ["Grass", "Electric", "Fighting", "Ground"],
+    "descricao": "Kabuto é um fóssil revivido com casco duro."
+  },
+  {
+    "numero": 141,
+    "nome": "Kabutops",
+    "tipo": ["Rock", "Water"],
+    "fraquezas": ["Grass", "Electric", "Fighting", "Ground"],
+    "descricao": "Kabutops é a evolução de Kabuto. Possui lâminas afiadas."
+  },
+  {
+    "numero": 142,
+    "nome": "Aerodactyl",
+    "tipo": ["Rock", "Flying"],
+    "fraquezas": ["Water", "Electric", "Ice", "Rock", "Steel"],
+    "descricao": "Aerodactyl é um fóssil revivido de um antigo Pokémon voador."
+  },
+  {
+    "numero": 143,
+    "nome": "Snorlax",
+    "tipo": ["Normal"],
+    "fraquezas": ["Fighting"],
+    "descricao": "Snorlax passa o dia dormindo e só acorda para comer."
+  },
+  {
+    "numero": 144,
+    "nome": "Articuno",
+    "tipo": ["Ice", "Flying"],
+    "fraquezas": ["Fire", "Electric", "Rock", "Steel"],
+    "descricao": "Articuno é um dos pássaros lendários. Controla o gelo."
+  },
+  {
+    "numero": 145,
+    "nome": "Zapdos",
+    "tipo": ["Electric", "Flying"],
+    "fraquezas": ["Rock", "Ice"],
+    "descricao": "Zapdos é um dos pássaros lendários. Controla a eletricidade."
+  },
+  {
+    "numero": 146,
+    "nome": "Moltres",
+    "tipo": ["Fire", "Flying"],
+    "fraquezas": ["Water", "Electric", "Rock"],
+    "descricao": "Moltres é um dos pássaros lendários. Controla o fogo."
+  },
+  {
+    "numero": 147,
+    "nome": "Dratini",
+    "tipo": ["Dragon"],
+    "fraquezas": ["Ice", "Dragon", "Fairy"],
+    "descricao": "Dratini é um dragão jovem que vive em rios e lagos."
+  },
+  {
+    "numero": 148,
+    "nome": "Dragonair",
+    "tipo": ["Dragon"],
+    "fraquezas": ["Ice", "Dragon", "Fairy"],
+    "descricao": "Dragonair é a evolução de Dratini. Seu corpo emite energia mística."
+  },
+  {
+    "numero": 149,
+    "nome": "Dragonite",
+    "tipo": ["Dragon", "Flying"],
+    "fraquezas": ["Ice", "Rock", "Dragon", "Fairy"],
+    "descricao": "Dragonite é a forma final de Dratini. É poderoso e bondoso."
+  },
+  {
+    "numero": 150,
+    "nome": "Mewtwo",
+    "tipo": ["Psychic"],
+    "fraquezas": ["Bug", "Ghost", "Dark"],
+    "descricao": "Mewtwo foi criado geneticamente a partir do DNA de Mew. É extremamente poderoso."
+  },
+  {
+    "numero": 151,
+    "nome": "Mew",
+    "tipo": ["Psychic"],
+    "fraquezas": ["Bug", "Ghost", "Dark"],
+    "descricao": "Mew é um Pokémon mítico de Kanto. Diz-se que contém o DNA de todos os Pokémon existentes."
+  }
+]

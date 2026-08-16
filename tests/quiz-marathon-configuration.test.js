@@ -111,6 +111,24 @@ test("override runtime contextual controla duração e troca de rodada", async (
   }
 });
 
+test("texto exibido acompanha duração e intervalo configurados", async () => {
+  const configuration = createConfigurationService();
+  configuration.set("quiz.marathon.questionDurationMilliseconds", 45_000, CONTEXT);
+  configuration.set("quiz.marathon.nextQuestionDelayMilliseconds", 7_000, CONTEXT);
+  const item = await fixture(configuration);
+  const sent = [];
+  try {
+    await item.service.startMarathon(CONTEXT, 5, async text => sent.push(text));
+    assert.match(sent[0], /Tempo por pergunta: 45 segundos/);
+    assert.match(sent[0], /Intervalo: 7 segundos/);
+    assert.match(sent[1], /Tempo: 45 segundos/);
+    await item.service.handleAnswer(CONTEXT, "resposta", async text => sent.push(text));
+    assert.ok(sent.some(text => /Próxima pergunta em 7 segundos/.test(text)));
+  } finally {
+    await cleanup(item);
+  }
+});
+
 test("override persistente por grupo é resolvido", async () => {
   const root = await fsp.mkdtemp(path.join(os.tmpdir(), "mikabot-marathon-persistent-"));
   try {

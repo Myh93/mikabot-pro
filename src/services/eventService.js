@@ -230,18 +230,21 @@ function createEventService(options = {}) {
   async function listEvents(context) {
     requireGroup(context);
     const events = await repository.listEvents({ platform: context.platform, groupId: context.groupId });
-    return events.filter((event) => ["scheduled", "published", "running"].includes(event.status) || (event.status === "draft" && (isCreator(event, context) || isPrivileged(context))));
+    return events.filter((event) => {
+      const lifecycle = messageFormatter.resolveLifecycleStatus(event, clock());
+      return ["upcoming", "active"].includes(lifecycle) || (event.status === "draft" && (isCreator(event, context) || isPrivileged(context)));
+    });
   }
 
   async function listUpcomingEvents(context) {
     const events = await repository.listEvents({ platform: context.platform, groupId: context.groupId, startsAfter: clock().toISOString() });
-    return events.filter((event) => ["scheduled", "published"].includes(event.status));
+    return events.filter((event) => messageFormatter.resolveLifecycleStatus(event, clock()) === "upcoming");
   }
 
-  async function listActiveEvents(context) { return (await listEvents(context)).filter((event) => ["scheduled", "published", "running"].includes(event.status)); }
+  async function listActiveEvents(context) { return (await listEvents(context)).filter((event) => messageFormatter.resolveLifecycleStatus(event, clock()) === "active"); }
   async function listEventHistory(context) {
     if (!isPrivileged(context)) throw createDomainError("EVENT_ADMIN_ONLY", "❌ Apenas administradores e owners podem consultar o histórico.");
-    return repository.listEvents({ platform: context.platform, groupId: context.groupId, includeArchived: true }).then((events) => events.filter((event) => ["finished", "cancelled", "archived"].includes(event.status)));
+    return repository.listEvents({ platform: context.platform, groupId: context.groupId, includeArchived: true }).then((events) => events.filter((event) => ["finished", "cancelled", "archived", "past"].includes(messageFormatter.resolveLifecycleStatus(event, clock()))));
   }
 
   async function listManageableEvents(context, groupIds = [], adminGroupIds = [], filters = {}) {
@@ -267,7 +270,7 @@ function createEventService(options = {}) {
 
   function formatEvent(event, options = {}) {
     if (options.publication) return messageFormatter.formatPublicEvent(event, { ...options, now: options.now || clock() });
-    return messageFormatter.formatEventDetails(event, { ...options, now: options.now || clock() });
+    return messageFormatter.formatEventDetails(event, { ...options, includeAdministrativeId: Boolean(options.includeAdministrativeId), now: options.now || clock() });
   }
 
   function formatEventList(events, title = "📅 EVENTOS DO GRUPO") {
@@ -277,7 +280,7 @@ function createEventService(options = {}) {
     return lines.join("\n").trim();
   }
 
-  return { createEvent, getEvent, updateEvent, updateEventData, updateEventEnd, scheduleEvent, publishEvent, cancelEvent, archiveEvent, finishEvent, listEvents, listUpcomingEvents, listActiveEvents, listEventHistory, listManageableEvents, moveEvent, formatEvent, formatEventList, parseDate, parseTime, formatDateTime, messageFormatter, STATUS_LABELS, AUTHORIZATION_MESSAGE };
+  return { createEvent, getEvent, updateEvent, updateEventData, updateEventEnd, scheduleEvent, publishEvent, cancelEvent, archiveEvent, finishEvent, listEvents, listUpcomingEvents, listActiveEvents, listEventHistory, listManageableEvents, moveEvent, formatEvent, formatEventList, resolveLifecycleStatus: (event) => messageFormatter.resolveLifecycleStatus(event, clock()), parseDate, parseTime, formatDateTime, messageFormatter, STATUS_LABELS, AUTHORIZATION_MESSAGE };
 }
 
 const service = createEventService();

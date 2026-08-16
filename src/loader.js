@@ -91,6 +91,22 @@ function resolvePrivateRegistrationCommand(context, body) {
   return ["cadastro", "cadastrar", "registro", "registrar"].includes(normalized) ? normalized : null;
 }
 
+const PREFIX_OPTIONAL_COMMANDS = new Set([
+  "menu", "comandos", "quiz", "perfil", "pokemon", "pokedex", "counter", "counters", "pokebola",
+  "cadastro", "cadastrar", "registro", "registrar", "ranking", "conquistas", "feedback",
+  "evento", "eventos", "raid", "maratona", "missoes"
+]);
+const PREFIX_OPTIONAL_WITH_ARGUMENTS = new Set(["pokedex", "counter", "counters"]);
+
+function resolveUnprefixedCommand(body) {
+  const normalized = inputResolver.normalizeInput(body);
+  if (!normalized) return null;
+  const resolved = resolveCommand(normalized);
+  if (!resolved || !PREFIX_OPTIONAL_COMMANDS.has(resolved.matchedName)) return null;
+  if (resolved.args.length && !PREFIX_OPTIONAL_WITH_ARGUMENTS.has(resolved.matchedName)) return null;
+  return normalized;
+}
+
 async function dispatchCommand(client, msg, commandText) {
   const resolved = resolveCommand(commandText);
   if (!resolved) return false;
@@ -268,6 +284,13 @@ function attach(client) {
           client, msg, context: platformContext, text: body,
           executeCommand: async (text) => dispatchCommand(client, msg, text)
         });
+        return;
+      }
+
+      const unprefixedCommand = resolveUnprefixedCommand(body);
+      if (unprefixedCommand) {
+        await dispatchCommand(client, msg, unprefixedCommand);
+        return;
       }
     } catch (err) {
       logDetailedError("Erro no loader de mensagens:", err);
@@ -283,5 +306,6 @@ Object.defineProperty(comandos, "attach", { value: attach, enumerable: false });
 Object.defineProperty(comandos, "detach", { value: detach, enumerable: false });
 Object.defineProperty(comandos, "dispatchCommand", { value: dispatchCommand, enumerable: false });
 Object.defineProperty(comandos, "resolvePrivateRegistrationCommand", { value: resolvePrivateRegistrationCommand, enumerable: false });
+Object.defineProperty(comandos, "resolveUnprefixedCommand", { value: resolveUnprefixedCommand, enumerable: false });
 
 module.exports = comandos;

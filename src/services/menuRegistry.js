@@ -11,7 +11,7 @@ const DEFINITIONS = {
     options: [
       { label: "Raids", menuId: "raid" }, { label: "Quiz", menuId: "quiz" },
       { label: "Pokémon", menuId: "pokemon" }, { label: "Perfil", menuId: "profile" },
-      { label: "Eventos", menuId: "events", privateMenuId: "events_private" }, { label: "Regras", info: "Em desenvolvimento." },
+      { label: "Eventos", menuId: "events", privateMenuId: "events_private" }, { label: "Ajuda e Comandos", menuId: "help" },
       { label: "Administração", menuId: "admin", permission: "admin" }
     ]
   },
@@ -35,20 +35,20 @@ const DEFINITIONS = {
     id: "raid", title: "⚔️ *MENU DE RAIDS*", permission: "public",
     options: [
       { label: "Criar Raid", command: "criar raid" },
-      { label: "Editar Raid", info: "Use: !editar raid R1024 > Novo nome" },
-      { label: "Cancelar Raid", info: "Use: !cancelar raid R1024" },
-      { label: "Publicar Raid", info: "Use: !publicar raid R1024" },
+      { label: "Editar Raid", command: "editar raid", prompt: "✏️ Informe a Raid e o novo nome.\n\nExemplo: R1024 > Novo nome\n\n0️⃣ Voltar" },
+      { label: "Cancelar Raid", command: "cancelar raid", prompt: "🗑️ Qual Raid deseja cancelar?\n\nInforme o ID ou nome.\n\n0️⃣ Voltar" },
+      { label: "Publicar Raid", command: "publicar raid", prompt: "📣 Qual Raid deseja publicar?\n\nInforme o ID.\n\n0️⃣ Voltar" },
       { label: "Listar Raids", command: "listar raids" },
-      { label: "Entrar em Raid", info: "Responda à mensagem da raid com !vou ou use !vou R1024." },
-      { label: "Desistir de Raid", info: "Responda à mensagem da raid com !desistir ou use !desistir R1024." },
-      { label: "Ver Participantes", info: "Responda à mensagem da raid com !lista ou use !lista R1024." }
+      { label: "Entrar em Raid", command: "vou", prompt: "✅ Em qual Raid deseja entrar?\n\nInforme o ID.\n\n0️⃣ Voltar" },
+      { label: "Desistir de Raid", command: "desistir", prompt: "🚪 De qual Raid deseja desistir?\n\nInforme o ID.\n\n0️⃣ Voltar" },
+      { label: "Ver Participantes", command: "lista", prompt: "📋 De qual Raid deseja ver os participantes?\n\nInforme o ID.\n\n0️⃣ Voltar" }
     ]
   },
   pokemon: {
     id: "pokemon", title: "🔍 *MENU POKÉMON*", permission: "public",
     options: [
-      { label: "Pokédex", info: "Envie: !pokedex Pikachu" },
-      { label: "Counters", info: "Envie: !counter Pikachu" },
+      { label: "Pokédex", command: "pokedex", prompt: "🔎 Qual Pokémon deseja consultar?\n\n0️⃣ Voltar" },
+      { label: "Counters", command: "counter", aliases: ["counters"], prompt: "⚔️ Qual Pokémon deseja consultar?\n\n0️⃣ Voltar" },
       { label: "Pokébola", command: "pokebola" }, { label: "Quiz", menuId: "quiz" },
       { label: "Minha Coleção", info: "Em desenvolvimento." }
     ]
@@ -79,14 +79,47 @@ const DEFINITIONS = {
     options: [
       { label: "Eventos Ativos", command: "listar eventos" },
       { label: "Próximos Eventos", command: "proximos eventos" },
-      { label: "Ver Evento", info: "Use: !ver evento E0001" },
-      { label: "Criar Evento", info: "Use: !criar evento TÍTULO | DESCRIÇÃO | DATA | HORA" },
-      { label: "Editar Evento", info: "Use: !editar evento E0001 titulo Novo título", permission: "admin" },
-      { label: "Publicar Evento", info: "Use: !publicar evento E0001", permission: "admin" },
-      { label: "Cancelar Evento", info: "Use: !cancelar evento E0001", permission: "admin" },
-      { label: "Finalizar Evento", info: "Use: !finalizar evento E0001", permission: "admin" },
-      { label: "Arquivar Evento", info: "Use: !arquivar evento E0001", permission: "admin" },
+      { label: "Ver Evento", command: "ver evento" },
+      { label: "Criar Evento", command: "criar evento" },
+      { label: "Editar Evento", command: "editar evento", permission: "admin" },
+      { label: "Publicar Evento", command: "publicar evento", permission: "admin" },
+      { label: "Cancelar Evento", command: "cancelar evento", permission: "admin" },
+      { label: "Finalizar Evento", command: "finalizar evento", permission: "admin" },
+      { label: "Arquivar Evento", command: "arquivar evento", permission: "admin" },
       { label: "Histórico", command: "historico eventos", permission: "admin" }
+    ]
+  },
+  help: {
+    id: "help", title: "🤝 *AJUDA E COMANDOS*", permission: "public", backMenuId: "main",
+    options: [
+      { label: "Cadastro e Perfil", menuId: "profile" },
+      { label: "Pokémon", menuId: "pokemon" },
+      { label: "Quiz", menuId: "quiz" },
+      { label: "Raids", menuId: "raid" },
+      { label: "Eventos", menuId: "events", privateMenuId: "events_private" },
+      { label: "Feedback", command: "feedback" },
+      {
+        label: "Outros recursos",
+        info: [
+          "📚 *OUTROS RECURSOS*", "",
+          "• TREINADORES — consulta pública", "• PRIVACIDADE — preferências do cadastro",
+          "• MISSÕES — jornada do treinador", "• PARARLEMBRETES — lembretes da jornada",
+          "• MEUSLINKS — solicitações de links", "• ENVIARLINK — solicitar publicação"
+        ].join("\n")
+      },
+      {
+        label: "Comandos administrativos",
+        permission: "admin",
+        info: [
+          "🛡️ *COMANDOS ADMINISTRATIVOS*", "",
+          "• WARN / AVISAR / WARNINGS / LIMPARAVISOS", "• BANIR / DESBANIR / BANIDOS",
+          "• ANTILINK / APROVACAOLINK / ACAOAVISOS / LIMITEAVISOS / BANREENTRADA",
+          "• FEEDBACKS", "• CADASTROS", "• APAGARMEMBRO / APAGARCADASTRO / RESETQUIZ / STATUSMEMBRO / PRESERVARMEMBRO",
+          "• LINKSPENDENTES / ANALISARLINK / APROVARSOLICITACAO / REJEITARSOLICITACAO",
+          "• SINCRONIZAR GRUPOS", "• GRUPOS / NOMEAR GRUPO / REGISTRAR GRUPO", "• PRAZORETORNO"
+        ].join("\n")
+      },
+      { label: "Administração", menuId: "admin", permission: "admin" }
     ]
   },
   events_private: {
@@ -97,6 +130,7 @@ const DEFINITIONS = {
       { label: "Publicar evento", command: "publicar evento" },
       { label: "Cancelar evento", command: "cancelar evento" },
       { label: "Finalizar evento", command: "finalizar evento" },
+      { label: "Arquivar evento", command: "arquivar evento" },
       { label: "Ver agendados", command: "eventos agendados" },
       { label: "Histórico", command: "historico eventos" },
       { label: "Sair", command: "sair" }

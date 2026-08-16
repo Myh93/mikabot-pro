@@ -171,13 +171,14 @@ function createQuizService(options = {}) {
       if (correct) {
         const multiplier = [1, 0.75, 0.5][Math.min(attempts, 2)];
         const pointsAwarded = Number((session.points * multiplier).toFixed(2));
+        const pointsPenalty = Number((session.points - pointsAwarded).toFixed(2));
         const finished = await finishRoundUnlocked(context, session, { winnerId: context.userId, finishReason: "correct_answer", attemptsUsed: attempts + 1 });
         await repository.incrementUserStats(context.platform, context.groupId, context.userId, {
           points: pointsAwarded, correctAnswers: 1, gamesPlayed: 1, wins: 1, streakDelta: 1,
           questionType: session.questionType, difficulty: session.difficulty, lastPlayedAt: finished.finishedAt
         });
         const progression = await playerProgressService.registerCorrectAnswer({ platform: context.platform, groupId: context.groupId, playerId: context.userId, roundId: session.roundId, difficulty: session.difficulty, displayName: context.displayName, at: finished.finishedAt });
-        return { status: "correct", round: finished, winnerId: context.userId, pointsAwarded, progression };
+        return { status: "correct", round: finished, winnerId: context.userId, basePoints: session.points, pointsPenalty, pointsAwarded, attemptsUsed: attempts + 1, progression };
       }
 
       const nextAttempts = attempts + 1;
@@ -195,7 +196,8 @@ function createQuizService(options = {}) {
         return { status: "finished", reason: "attempts_exhausted", round: finished, attemptsRemaining: 0, correctAnswer: localizedCorrectAnswer(session), progression };
       }
       const updated = await repository.updateSession(context.platform, context.groupId, session.roundId, { attemptsByUser: updatedAttempts });
-      return { status: "wrong", round: updated, attemptsRemaining: 3 - nextAttempts, progression };
+      const nextMultiplier = [1, 0.75, 0.5][Math.min(nextAttempts, 2)];
+      return { status: "wrong", round: updated, attemptsRemaining: 3 - nextAttempts, nextAttemptPoints: Number((session.points * nextMultiplier).toFixed(2)), progression };
     });
   }
 

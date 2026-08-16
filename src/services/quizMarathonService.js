@@ -195,7 +195,7 @@ function createQuizMarathonService(options = {}) {
       current.updatedAt = now.toISOString();
       return current;
     });
-    await senders.get(key)?.(formatter.formatQuestion(started.question, session.currentQuestion, session.totalQuestions, localeService.translateDifficulty));
+    await senders.get(key)?.(formatter.formatQuestion(started.question, session.currentQuestion, session.totalQuestions, localeService.translateDifficulty, durationMs));
     schedule(key, durationMs, () => expireCurrentQuestion(context));
     return session;
   }
@@ -220,7 +220,7 @@ function createQuizMarathonService(options = {}) {
     if (!session?.currentRoundId) return null;
     await quizService.expireRound({ ...context, roundId: session.currentRoundId });
     if (session.currentQuestion >= session.totalQuestions) return finishMarathon(context);
-    await senders.get(keyFor(context.platform, context.groupId))?.(formatter.formatTimeout(true));
+    await senders.get(keyFor(context.platform, context.groupId))?.(formatter.formatTimeout(true, nextQuestionDelay(context)));
     return queueNextQuestion(context);
   }
 
@@ -238,7 +238,7 @@ function createQuizMarathonService(options = {}) {
       database.sessions[key] = { marathonId: `QM${crypto.randomUUID().replace(/-/g, "").toUpperCase()}`, platform: context.platform, groupId: context.groupId, status: "active", totalQuestions: total, currentQuestion: 0, currentRoundId: null, ranking: {}, participants: {}, startedAt: now, updatedAt: now, questionStartedAt: null, questionExpiresAt: null, nextQuestionAt: null, finishedAt: null, finishReason: null };
       return database.sessions[key];
     });
-    await sendText(formatter.formatStart(total));
+    await sendText(formatter.formatStart(total, questionDuration(context), nextQuestionDelay(context)));
     const session = await startNextQuestion(context);
     return { status: "started", session };
   }
@@ -278,7 +278,7 @@ function createQuizMarathonService(options = {}) {
       await senders.get(key)?.(formatter.formatCorrectAnswer(resolvedName, result.pointsAwarded, false));
       await finishMarathon(context);
     } else {
-      await senders.get(key)?.(formatter.formatCorrectAnswer(resolvedName, result.pointsAwarded, true));
+      await senders.get(key)?.(formatter.formatCorrectAnswer(resolvedName, result.pointsAwarded, true, nextQuestionDelay(context)));
       await queueNextQuestion(context);
     }
     if (result.progression?.leveledUp) {

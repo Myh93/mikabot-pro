@@ -51,7 +51,7 @@ function createPlayerProfileService(options = {}) {
     const nextLevel = progressService.getNextLevelProgress(progress.xp);
     const accuracy = progressService.getPlayerAccuracy(progress);
     const rankings = await calculateRankingPositions(platform, groupId, playerId, isGroup);
-    const achievements = achievementService ? await achievementService.evaluateAchievements({ platform, groupId, playerId, isGroup }) : { obtained: 0, total: 23, lastAchievement: null };
+    const achievements = achievementService ? await achievementService.evaluateAchievements({ platform, groupId, playerId, isGroup }) : { obtained: 0, total: 22, lastAchievement: null };
     const journey = journeyService ? await journeyService.getMissions(playerId) : null;
     return { ...progress, name, level: nextLevel.level, nextLevel, accuracy, rankings, achievements, journey };
   }
@@ -65,9 +65,9 @@ function createPlayerProfileService(options = {}) {
     return [
       "━━━━━━━━━━━━━━━━━━━━━━", "👤 PERFIL DO TREINADOR", "━━━━━━━━━━━━━━━━━━━━━━", "",
       `🎮 ${profile.name}`, "", `⭐ Nível ${profile.level}`, "", "✨ XP", `${next.currentLevelXp} / ${next.nextLevelXp}`, "", buildProgressBar(next.progressXp, next.requiredXp), "",
-      "━━━━━━━━━━━━━━", "", "🏆 Estatísticas", "", "✅ Acertos", String(profile.correctAnswers || 0), "", "❌ Erros", String(profile.wrongAnswers || 0), "", "🎯 Precisão", formatPercent(profile.accuracy), "", "🔥 Combo Atual", String(profile.currentCombo || 0), "", "⚡ Melhor Combo", String(profile.bestCombo || 0), "",
+      "━━━━━━━━━━━━━━", "", "🏆 Estatísticas da progressão geral", "", "✅ Acertos", String(profile.correctAnswers || 0), "", "❌ Erros", String(profile.wrongAnswers || 0), "", "🎯 Precisão", formatPercent(profile.accuracy), "", "🔥 Combo Atual", String(profile.currentCombo || 0), "", "⚡ Melhor Combo", String(profile.bestCombo || 0), "",
       "━━━━━━━━━━━━━━", "", "🏁 Maratonas", "", "🎮 Participações", String(profile.marathonsPlayed || 0), "", "🥇 Vitórias", String(profile.wins || 0), "", "⭐ MVPs", String(profile.mvpCount || 0), "",
-      "━━━━━━━━━━━━━━", "", "🏅 Conquistas", "", `Obtidas: ${profile.achievements?.obtained || 0} / ${profile.achievements?.total || 23}`, "", "Última conquista:", profile.achievements?.lastAchievement?.name || "Nenhuma", "",
+      "━━━━━━━━━━━━━━", "", "🏅 Conquistas", "", `Obtidas: ${profile.achievements?.obtained || 0} / ${profile.achievements?.total || 22}`, "", "Última conquista:", profile.achievements?.lastAchievement?.name || "Nenhuma", "",
       ...(profile.journey ? ["━━━━━━━━━━━━━━", "", "🎯 Jornada inicial", `${profile.journey.completed}/${profile.journey.total} missões concluídas`, ""] : []),
       "━━━━━━━━━━━━━━", "", "🏆 Ranking do Grupo", "", groupRank, "", "🌎 Ranking Global", "", globalRank, "", "━━━━━━━━━━━━━━", "", "Continue participando dos Quizzes e Maratonas para evoluir."
     ].join("\n");

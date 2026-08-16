@@ -140,6 +140,26 @@ function createMenuSessionService(options = {}) {
     });
   }
 
+  async function beginPrompt(context, option, prompt) {
+    if (!isCompletePlatformContext(context)) return null;
+    return mutate((store) => {
+      const key = buildMenuKey(context.platform, context.conversationId, context.userId);
+      const session = store.sessions[key];
+      if (!session || session.status !== "active" || Date.parse(session.expiresAt) <= clock().getTime()) return null;
+      session.pendingPrompt = {
+        command: String(option?.command || "").trim(),
+        prompt: String(prompt || option?.prompt || "").trim()
+      };
+      session.updatedAt = clock().toISOString();
+      session.expiresAt = expiresFor(sessionDuration(context));
+      return session;
+    });
+  }
+
+  function expiresFor(duration) {
+    return new Date(clock().getTime() + duration).toISOString();
+  }
+
   async function closeMenu(context, legacyConversationId, legacyUserId) {
     if (typeof context === "string") {
       context = {
@@ -201,7 +221,7 @@ function createMenuSessionService(options = {}) {
     });
   }
 
-  return { openMenu, getMenuState, getActiveMenu, selectOption, touchMenu, closeMenu, expireMenu, clearExpiredMenus, buildMenuKey };
+  return { openMenu, getMenuState, getActiveMenu, selectOption, beginPrompt, touchMenu, closeMenu, expireMenu, clearExpiredMenus, buildMenuKey };
 }
 
 const service = createMenuSessionService();

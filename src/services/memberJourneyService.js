@@ -57,7 +57,7 @@ function createMemberJourneyService(options = {}) {
 
   function formatMissions(value) {
     const labels = { registration_completion: "Concluir cadastro", first_raid: "Participar da primeira Raid", first_quiz: "Jogar o primeiro Quiz", first_event: "Participar de um Evento", first_feedback: "Enviar um Feedback", first_marathon: "Participar de uma Maratona" };
-    return ["🎯 MISSÕES DO TREINADOR", "", ...value.missions.map(item => `${item.completed ? "✅" : "⬜"} ${labels[item.key]}`), "", `Progresso: ${value.completed}/${value.total}`].join("\n");
+    return ["🎯 MISSÕES DO TREINADOR", "", ...value.missions.map(item => `${item.completed ? "✅" : "⬜"} ${labels[item.key]}`), "", `Progresso: ${value.completed}/${value.total}`, "", "As missões contam ações registradas desde a ativação da Jornada."].join("\n");
   }
 
   return { grant, getMissions, formatMissions, getRewardCatalog: () => ({ ...REWARDS }), getMissionKeys: () => [...MISSION_KEYS] };

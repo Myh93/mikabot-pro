@@ -52,7 +52,7 @@ async function answer(f, text, context = f.context) { return f.guided.handleAnsw
 
 async function reachReview(f, choices = {}) {
   await f.guided.startCreateFlow(f.client, f.context, choices.role || member);
-  for (const value of [choices.group || "1", choices.type || "1", choices.title || "Quiz de Hoje", choices.description || "Vai ter quiz", choices.date || "hoje", choices.time || "20h", choices.endChoice || "2", choices.prizeChoice || "2", choices.notices || "3"]) await answer(f, value);
+  for (const value of [choices.group || "1", choices.title || "Quiz de Hoje", choices.description || "Vai ter quiz", choices.date || "hoje", choices.time || "20h", choices.type || "1", choices.endChoice || "2", choices.prizeChoice || "2", choices.notices || "3"]) await answer(f, value);
   return f.flowService.getActiveFlow("whatsapp", "111@c.us", "111@c.us");
 }
 
@@ -104,7 +104,7 @@ test("aceita amanhã, 20h30, término e prêmio", async () => {
   const f = await fixture();
   try {
     await f.guided.startCreateFlow(f.client, f.context, member);
-    for (const value of ["1", "7", "Evento", "Descrição", "amanhã", "20h30", "1", "17/07/2026", "22h", "1", "Pikachu Shiny", "4"]) await answer(f, value);
+    for (const value of ["1", "Evento", "Descrição", "amanhã", "20h30", "7", "1", "17/07/2026", "22h", "1", "Pikachu Shiny", "4"]) await answer(f, value);
     const session = await f.flowService.getActiveFlow("whatsapp", "111@c.us", "111@c.us");
     assert.equal(session.step, "review");
     assert.equal(session.data.endTime, "22h");
@@ -117,7 +117,7 @@ test("término inválido mantém etapa e dados anteriores", async () => {
   const f = await fixture();
   try {
     await f.guided.startCreateFlow(f.client, f.context, member);
-    for (const value of ["1", "1", "Evento", "Descrição", "17/07/2026", "20h", "1", "16/07/2026"]) await answer(f, value);
+    for (const value of ["1", "Evento", "Descrição", "17/07/2026", "20h", "1", "1", "16/07/2026"]) await answer(f, value);
     assert.equal((await answer(f, "19h")).status, "validation_error");
     const session = await f.flowService.getActiveFlow("whatsapp", "111@c.us", "111@c.us");
     assert.equal(session.step, "end_time");
@@ -208,7 +208,7 @@ test("edição guiada altera título pelo mesmo eventService", async () => {
   try {
     const event = await f.repository.createEvent({ title: "Original", type: "custom", platform: "whatsapp", groupId: "group-a@g.us", creatorId: "111@c.us", status: "draft" });
     await f.guided.startActionFlow("edit_event", f.client, f.context, member);
-    await answer(f, "1"); await answer(f, "1"); await answer(f, "Novo título"); await answer(f, "10");
+    await answer(f, "1"); await answer(f, "1"); await answer(f, "Novo título"); await answer(f, "1"); await answer(f, "10");
     assert.equal((await f.repository.getEventById(event.id)).title, "Novo título");
     assert.match(f.replies.at(-1), /Edição concluída/);
   } finally { await cleanup(f.root); }

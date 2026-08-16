@@ -1,0 +1,304 @@
+{
+  "schemaVersion": 1,
+  "datasetVersion": "1b-2026-07-15T23-21-37-219Z",
+  "generations": [
+    {
+      "generation": 1,
+      "min": 1,
+      "max": 151,
+      "file": "pokedex_gen1.json"
+    },
+    {
+      "generation": 2,
+      "min": 152,
+      "max": 251,
+      "file": "pokedex_gen2.json"
+    },
+    {
+      "generation": 3,
+      "min": 252,
+      "max": 386,
+      "file": "pokedex_gen3.json"
+    },
+    {
+      "generation": 4,
+      "min": 387,
+      "max": 493,
+      "file": "pokedex_gen4.json"
+    },
+    {
+      "generation": 5,
+      "min": 494,
+      "max": 649,
+      "file": "pokedex_gen5.json"
+    },
+    {
+      "generation": 6,
+      "min": 650,
+      "max": 721,
+      "file": "pokedex_gen6.json"
+    },
+    {
+      "generation": 7,
+      "min": 722,
+      "max": 809,
+      "file": "pokedex_gen7.json"
+    },
+    {
+      "generation": 8,
+      "min": 810,
+      "max": 905,
+      "file": "pokedex_gen8.json"
+    },
+    {
+      "generation": 9,
+      "min": 906,
+      "max": 1025,
+      "file": "pokedex_gen9.json"
+    }
+  ],
+  "pokemonCount": 981,
+  "pokemonCountExpected": 1025,
+  "missingNumbers": [
+    21,
+    22,
+    23,
+    24,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65
+  ],
+  "duplicateNames": [
+    {
+      "normalizedName": "wo-chien",
+      "name": "Wo-Chien",
+      "numbers": [
+        984,
+        1001
+      ]
+    },
+    {
+      "normalizedName": "chien-pao",
+      "name": "Chien-Pao",
+      "numbers": [
+        985,
+        1002
+      ]
+    },
+    {
+      "normalizedName": "ting-lu",
+      "name": "Ting-Lu",
+      "numbers": [
+        986,
+        1003
+      ]
+    },
+    {
+      "normalizedName": "chi-yu",
+      "name": "Chi-Yu",
+      "numbers": [
+        987,
+        1004
+      ]
+    },
+    {
+      "normalizedName": "roaring moon",
+      "name": "Roaring Moon",
+      "numbers": [
+        988,
+        1005
+      ]
+    },
+    {
+      "normalizedName": "iron valiant",
+      "name": "Iron Valiant",
+      "numbers": [
+        989,
+        1006
+      ]
+    },
+    {
+      "normalizedName": "koraidon",
+      "name": "Koraidon",
+      "numbers": [
+        990,
+        1007
+      ]
+    },
+    {
+      "normalizedName": "miraidon",
+      "name": "Miraidon",
+      "numbers": [
+        991,
+        1008
+      ]
+    },
+    {
+      "normalizedName": "walking wake",
+      "name": "Walking Wake",
+      "numbers": [
+        992,
+        1009
+      ]
+    },
+    {
+      "normalizedName": "iron leaves",
+      "name": "Iron Leaves",
+      "numbers": [
+        993,
+        1010
+      ]
+    },
+    {
+      "normalizedName": "dipplin",
+      "name": "Dipplin",
+      "numbers": [
+        994,
+        1011
+      ]
+    },
+    {
+      "normalizedName": "hydrapple",
+      "name": "Hydrapple",
+      "numbers": [
+        995,
+        1019
+      ]
+    },
+    {
+      "normalizedName": "archaludon",
+      "name": "Archaludon",
+      "numbers": [
+        996,
+        1018
+      ]
+    },
+    {
+      "normalizedName": "iron boulder",
+      "name": "Iron Boulder",
+      "numbers": [
+        997,
+        1022
+      ]
+    },
+    {
+      "normalizedName": "iron crown",
+      "name": "Iron Crown",
+      "numbers": [
+        998,
+        1023
+      ]
+    }
+  ],
+  "blockedPokemonNumbers": [
+    984,
+    985,
+    986,
+    987,
+    988,
+    989,
+    990,
+    991,
+    992,
+    993,
+    994,
+    995,
+    996,
+    997,
+    998,
+    1001,
+    1002,
+    1003,
+    1004,
+    1005,
+    1006,
+    1007,
+    1008,
+    1009,
+    1010,
+    1011,
+    1018,
+    1019,
+    1022,
+    1023
+  ],
+  "checksums": {
+    "pokedex_gen1.json": {
+      "algorithm": "sha256",
+      "value": "4074fa8a0c0a46f1dcaec702c8969092c7128324110e10abe422f7adc56540d9"
+    },
+    "pokedex_gen2.json": {
+      "algorithm": "sha256",
+      "value": "793b3a9d90b1ad5d0d0af2392a117a3a9117c4bf2932da35e814228c04aeaa55"
+    },
+    "pokedex_gen3.json": {
+      "algorithm": "sha256",
+      "value": "61bfdeb21cfafbf590a8c148c645b0a6282a611f1688d3348af563cd3c0e1a90"
+    },
+    "pokedex_gen4.json": {
+      "algorithm": "sha256",
+      "value": "3f622a3740088cabcfda1e012ea5bb8c30a996b40f77cc13c95415da868b7266"
+    },
+    "pokedex_gen5.json": {
+      "algorithm": "sha256",
+      "value": "dd3b3bcd8d00a6cf9135a0ec0f912f92276d39d7460fae25f084801c3664d3ba"
+    },
+    "pokedex_gen6.json": {
+      "algorithm": "sha256",
+      "value": "28f0a0e50196b560e610bb3431658b6fb331b0a73d524e0558235783571849c3"
+    },
+    "pokedex_gen7.json": {
+      "algorithm": "sha256",
+      "value": "be8e72c6c8f0c2012fe3ff03f8788260227f40fbaed270f8156631bda9e89bb1"
+    },
+    "pokedex_gen8.json": {
+      "algorithm": "sha256",
+      "value": "e7d4b91cc4c68e919cf48a10705c2361a1dea2ce05ac02fb91c9fd3b246e9876"
+    },
+    "pokedex_gen9.json": {
+      "algorithm": "sha256",
+      "value": "997d6797f47b20ccb026d9f0af30e5bdedf653487581458ddaf06183b72d1bc8"
+    }
+  },
+  "lastUpdatedAt": "2026-07-15T23:24:35.225Z",
+  "status": "partial_validated",
+  "backupUsed": "src/database/backups/pokedex/2026-07-15T23-21-37-020Z",
+  "backupReused": false
+}

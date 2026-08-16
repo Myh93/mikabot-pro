@@ -224,7 +224,12 @@ test("menu e comando direto apontam para os mesmos comandos do serviço", () => 
   const options = registry.getMenu("events").options;
   assert.equal(options.find((item) => item.label === "Eventos Ativos").command, "listar eventos");
   assert.equal(options.find((item) => item.label === "Próximos Eventos").command, "proximos eventos");
-  assert.equal(options.some((item) => item.command && !["listar eventos", "proximos eventos", "historico eventos"].includes(item.command)), false);
+  const expected = [
+    "listar eventos", "proximos eventos", "ver evento", "criar evento", "editar evento",
+    "publicar evento", "cancelar evento", "finalizar evento", "arquivar evento", "historico eventos"
+  ];
+  assert.deepEqual(options.map(item => item.command).filter(Boolean), expected);
+  assert.equal(options.filter(item => item.prompt).every(item => !item.prompt.includes("!")), true);
 });
 
 test("comando não acessa JSON nem registra listener", async () => {
