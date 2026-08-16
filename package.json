@@ -1,13 +1,19 @@
 {
   "name": "mikabot-novo",
-  "version": "1.0.0",
-  "description": "",
+  "version": "2.0.0",
+  "description": "MikaBot PRO v2.0 Stable — bot modular para comunidades Pokémon GO no WhatsApp",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "check": "node --check index.js",
+    "test": "node --test"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "mikabot"
+  ],
+  "author": "DJ Giliard Lopes",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
