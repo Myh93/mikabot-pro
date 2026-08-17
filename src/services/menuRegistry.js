@@ -141,39 +141,82 @@ const DEFINITIONS = {
     options: [
       { label: "Segurança", aliases: ["protecao", "proteção"], menuId: "admin.security", permission: "admin" },
       { label: "Marcar Todos", info: "Use: !todos mensagem", permission: "admin" },
-      { label: "Warn", info: "Em desenvolvimento.", permission: "admin" },
-      { label: "Ban", info: "Em desenvolvimento.", permission: "admin" },
+      { label: "Warn", menuId: "admin.warnings", permission: "admin" },
+      { label: "Ban", menuId: "admin.bans", permission: "admin" },
       { label: "Sincronizar", command: "sync", permission: "admin" },
       { label: "Configurar Grupo", menuId: "config", permission: "admin" },
-      { label: "Logs", info: "Em desenvolvimento.", permission: "admin" }
+      { label: "Regras", menuId: "admin.rules", permission: "admin" },
+      { label: "Automações", menuId: "admin.automations", permission: "admin" },
+      { label: "Logs", info: "Use os comandos de histórico disponíveis em Segurança.", permission: "admin" }
     ]
   },
   config: {
     id: "config", title: "⚙️ *CONFIGURAÇÕES DO GRUPO*", permission: "admin", backMenuId: "admin",
-    options: ["Boas-vindas", "Anti-spam", "Anti-flood", "Regras", "Quiz", "Raids", "Eventos"]
-      .map((label) => ({ label, info: "Em desenvolvimento.", permission: "admin" }))
+    options: [
+      { label: "Boas-vindas", command: "boasvindas" },
+      { label: "Anti-spam", menuId: "admin.automations" },
+      { label: "Anti-flood", menuId: "admin.automations" },
+      { label: "Regras", menuId: "admin.rules" },
+      { label: "Quiz", menuId: "quiz" },
+      { label: "Raids", menuId: "raid" },
+      { label: "Eventos", menuId: "events" }
+    ].map(option => ({ ...option, permission: "admin" }))
   },
   "admin.security": {
     id: "admin.security", title: "🛡️ *SEGURANÇA*", permission: "admin", backMenuId: "admin",
     options: [
-      {
-        label: "Sobre esta área",
-        aliases: ["informacoes", "informações"],
-        info: [
-          "🛡️ *SEGURANÇA*",
-          "",
-          "Esta área reunirá futuramente:",
-          "",
-          "• Antilink",
-          "• Advertências",
-          "• Banimentos",
-          "• Aprovação de links",
-          "",
-          "Nenhuma configuração foi alterada."
-        ].join("\n"),
-        permission: "admin"
-      }
+      { label: "Advertências", menuId: "admin.warnings", permission: "admin" },
+      { label: "Banimentos", menuId: "admin.bans", permission: "admin" },
+      { label: "Aprovação de Links", command: "linkspendentes", permission: "admin" },
+      { label: "Histórico Disciplinar", command: "historico ban", prompt: "📚 Mencione um membro ou informe a identidade aceita pelo sistema.\n\n0️⃣ Voltar", permission: "admin" },
+      { label: "Configurações de Segurança", menuId: "admin.automations", permission: "admin" }
     ]
+  },
+  "admin.rules": {
+    id: "admin.rules", title: "📜 *REGRAS DO GRUPO*", permission: "admin", backMenuId: "admin",
+    options: [
+      { label: "Ver regras", command: "regras" },
+      { label: "Editar, revisar e publicar", command: "administrar regras" },
+      { label: "Ver histórico e restaurar", command: "administrar regras" }
+    ]
+  },
+  "admin.automations": {
+    id: "admin.automations", title: "🤖 *AUTOMAÇÕES*", permission: "admin", backMenuId: "admin",
+    options: [
+      { label: "Anti-spam", command: "status automacoes" },
+      { label: "Anti-flood", command: "status automacoes" },
+      { label: "Antilink", command: "antilink", prompt: "Informe on ou off.\n\n0️⃣ Voltar" },
+      { label: "Advertências automáticas", command: "acaoavisos", prompt: "Informe avisar ou banir.\n\n0️⃣ Voltar" },
+      { label: "Banimentos automáticos", command: "banreentrada", prompt: "Informe on ou off.\n\n0️⃣ Voltar" },
+      { label: "Join Request", command: "status automacoes" },
+      { label: "Boas-vindas", command: "boasvindas" },
+      { label: "Saída/Retorno", command: "despedida" },
+      { label: "Cadastro/Entrada", command: "status automacoes" },
+      { label: "Raids/Lembretes", command: "status automacoes" },
+      { label: "Eventos", command: "status automacoes" },
+      { label: "Quiz", command: "status automacoes" },
+      { label: "Status geral", command: "status automacoes" }
+    ].map(option => ({ ...option, permission: "admin" }))
+  },
+  "admin.warnings": {
+    id: "admin.warnings", title: "⚠️ *ADVERTÊNCIAS*", permission: "admin", backMenuId: "admin.security",
+    options: [
+      { label: "Aplicar Warn", command: "warn", prompt: "Mencione o membro e informe o motivo.\n\nExemplo: @membro Conduta inadequada\n\n0️⃣ Voltar" },
+      { label: "Ver Warns", command: "warnings", prompt: "Mencione o membro.\n\n0️⃣ Voltar" },
+      { label: "Remover Warn", command: "resetwarn", prompt: "Mencione o membro. A confirmação preservará o histórico.\n\n0️⃣ Voltar" },
+      { label: "Resetar Warns", command: "resetwarn", prompt: "Mencione o membro.\n\n0️⃣ Voltar" },
+      { label: "Histórico", command: "warnings", prompt: "Mencione o membro.\n\n0️⃣ Voltar" }
+    ].map(option => ({ ...option, permission: "admin" }))
+  },
+  "admin.bans": {
+    id: "admin.bans", title: "🚫 *BANIMENTOS*", permission: "admin", backMenuId: "admin.security",
+    options: [
+      { label: "Banir membro", command: "banir", prompt: "Mencione o membro e informe o motivo.\n\n0️⃣ Voltar" },
+      { label: "Desbanir membro", command: "banidos" },
+      { label: "Ver banidos", command: "banidos" },
+      { label: "Ver motivo", command: "banidos" },
+      { label: "Histórico", command: "historico ban", prompt: "Mencione o membro.\n\n0️⃣ Voltar" }
+    ].map(option => ({ ...option, permission: "admin" }))
   }
 };
 

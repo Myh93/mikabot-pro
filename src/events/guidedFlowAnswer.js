@@ -10,6 +10,7 @@ const feedbackAdministrationFlowDefault = require("../services/feedbackAdministr
 const memberDataAdministrationFlowDefault = require("../services/memberDataAdministrationFlowService");
 const memberExperienceAdministrationFlowDefault = require("../services/memberExperienceAdministrationService");
 const banExperienceAdministrationFlowDefault = require("../services/banExperienceAdministrationService");
+const groupRulesFlowDefault = require("../services/groupRulesFlowService");
 const { logDetailedError } = require("../../utils/logger");
 
 function normalizeGuidedFlowContext(context) {
@@ -43,6 +44,7 @@ function createGuidedFlowAnswer(options = {}) {
   const memberDataAdministrationFlow = options.memberDataAdministrationFlow || memberDataAdministrationFlowDefault;
   const memberExperienceAdministrationFlow = options.memberExperienceAdministrationFlow || memberExperienceAdministrationFlowDefault;
   const banExperienceAdministrationFlow = options.banExperienceAdministrationFlow || banExperienceAdministrationFlowDefault;
+  const groupRulesFlow = options.groupRulesFlow || groupRulesFlowDefault;
 
   const normalizeContext = normalizeGuidedFlowContext;
 
@@ -50,6 +52,7 @@ function createGuidedFlowAnswer(options = {}) {
     context = normalizeContext(context);
     if (!context) return false;
     if (await memberExperienceAdministrationFlow.hasActiveFlow(context)) return true;
+    if (await groupRulesFlow.hasActiveFlow(context)) return true;
     if (await banExperienceAdministrationFlow.hasActiveFlow(context)) return true;
     if (await memberDataAdministrationFlow.hasActiveFlow(context)) return true;
     if (await raidGuidedFlow.hasActiveFlow(context)) return true;
@@ -69,6 +72,10 @@ function createGuidedFlowAnswer(options = {}) {
     if (await memberExperienceAdministrationFlow.hasActiveFlow(context)) {
       try { return await memberExperienceAdministrationFlow.handleAnswer({ ...context, client, originalMessage: context.message }, text); }
       catch (error) { logDetailedError("Erro ao configurar experiência do membro:", error); await context.replyText("❌ Não foi possível continuar a configuração agora."); return { status: "error", error }; }
+    }
+    if (await groupRulesFlow.hasActiveFlow(context)) {
+      try { return await groupRulesFlow.handleAnswer(context, text); }
+      catch (error) { logDetailedError("Erro ao administrar regras:", error); await context.replyText("❌ Não foi possível continuar a administração das regras agora."); return { status: "error", error }; }
     }
     if (await banExperienceAdministrationFlow.hasActiveFlow(context)) {
       try { return await banExperienceAdministrationFlow.handleAnswer({ ...context, client, originalMessage: context.message }, text); }

@@ -81,14 +81,15 @@ test("menu Eventos oculta ações administrativas de membros", async () => {
   assert.strictEqual(Object.keys(adminMenu.options).length, 10);
 });
 
-test("menus Admin e Config exigem admin e não simulam funções ausentes", async () => {
+test("menus Admin e Config exigem admin e conectam funções existentes", async () => {
   const { registry } = fixture();
   assert.strictEqual((await registry.openMenu("admin", context(), member)).status, "denied");
   const adminMenu = await registry.openMenu("admin", context({ userId: "admin", replies: [], replyText: async () => undefined }), admin);
   const configMenu = await registry.openMenu("config", context({ userId: "admin2", replies: [], replyText: async () => undefined }), admin);
-  assert.strictEqual(Object.keys(adminMenu.options).length, 7);
+  assert.strictEqual(Object.keys(adminMenu.options).length, 9);
   assert.strictEqual(Object.keys(configMenu.options).length, 7);
-  assert.strictEqual(adminMenu.options["3"].info, "Em desenvolvimento.");
+  assert.strictEqual(adminMenu.options["3"].menuId, "admin.warnings");
+  assert.strictEqual(adminMenu.options["4"].menuId, "admin.bans");
 });
 
 test("opção válida encerra sessão e executa comando declarado", async () => {
@@ -246,13 +247,13 @@ test("membro não acessa opção administrativa escondida por número ou alias",
   assert.equal((await answer.handleMenuAnswer({ context: ctx, client: {}, msg: {}, text: "7", executeCommand: async () => undefined })).status, "invalid");
 });
 
-test("página demonstrativa de segurança não altera configuração real", async () => {
+test("Segurança separa advertências, bans, links, histórico e configurações", async () => {
   const { registry, answer } = fixture({ role: admin });
   const ctx = context({ userId: "admin" });
   await registry.openMenu("admin.security", ctx, admin);
-  const result = await answer.handleMenuAnswer({ context: ctx, client: {}, msg: {}, text: "informações", executeCommand: async () => assert.fail("não deve executar comando") });
-  assert.equal(result.status, "informed");
-  assert.match(ctx.replies.at(-1), /Nenhuma configuração foi alterada/);
+  const result = await answer.handleMenuAnswer({ context: ctx, client: {}, msg: {}, text: "Advertências", executeCommand: async () => assert.fail("abre submenu") });
+  assert.equal(result.status, "opened");
+  assert.match(ctx.replies.at(-1), /ADVERTÊNCIAS/);
   assert.equal((await registry.openMenu("admin.security", ctx, admin)).status, "opened");
 });
 
@@ -478,7 +479,8 @@ test("comando permanece prioritário e não entrega a entrada ao menu aberto", a
     loader.attach(client);
     await client.listener({ fromMe: false, from: "group@g.us", author: "123@c.us", body: "!regras", reply: async text => replies.push(text) });
     assert.equal(menuHandled, 0);
-    assert.deepEqual(replies, ["Em desenvolvimento."]);
+    assert.equal(replies.length, 1);
+    assert.match(replies[0], /REGRAS OFICIAIS/);
   } finally {
     menuAnswer.hasActiveMenu = activeOriginal;
     menuAnswer.handleMenuAnswer = handleOriginal;
